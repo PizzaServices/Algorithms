@@ -1,4 +1,4 @@
-﻿namespace PizzaAlgo.Search.BinarySearch
+﻿namespace PizzaAlgo.Search
 {
     public class BinarySearch
     {
