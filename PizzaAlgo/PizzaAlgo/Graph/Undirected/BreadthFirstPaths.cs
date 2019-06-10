@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace PizzaAlgo.Graph
 {
@@ -9,39 +7,39 @@ namespace PizzaAlgo.Graph
         private bool[] marked;
         private int[] edgeTo;
 
-        private readonly int startNode;
+        private readonly int startVertex;
 
-        public BreadthFirstPaths(Graph graph, int startNode)
+        public BreadthFirstPaths(Graph graph, int startVertex)
         {
-            marked = new bool[graph.Nodes];
-            edgeTo = new int[graph.Nodes];
-            this.startNode = startNode;
-            BreadthFirstSearch(graph, startNode);
+            marked = new bool[graph.Vertices];
+            edgeTo = new int[graph.Vertices];
+            this.startVertex = startVertex;
+            BreadthFirstSearch(graph, startVertex);
         }
 
-        public bool HasPathTo(int node)
+        public bool HasPathTo(int vertex)
         {
-            return marked[node];
+            return marked[vertex];
         }
 
-        public IEnumerable<int> PathTo(int node)
+        public IEnumerable<int> PathTo(int vertex)
         {
-            if (!HasPathTo(node))
+            if (!HasPathTo(vertex))
                 return null;
 
             Stack<int> path = new Stack<int>();
-            for (int i = node; i != startNode; i = edgeTo[i])
+            for (int i = vertex; i != startVertex; i = edgeTo[i])
                 path.Push(i);
 
-            path.Push(startNode);
+            path.Push(startVertex);
             return path;
         }
 
-        private void BreadthFirstSearch(Graph graph, int startNode)
+        private void BreadthFirstSearch(Graph graph, int startVertex)
         {
             Queue<int> queue = new Queue<int>();
-            marked[startNode] = true;
-            queue.Enqueue(startNode);
+            marked[startVertex] = true;
+            queue.Enqueue(startVertex);
 
             while(queue.Count != 0)
             {

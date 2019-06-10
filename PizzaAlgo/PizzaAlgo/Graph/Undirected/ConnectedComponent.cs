@@ -8,10 +8,10 @@
 
         public ConnectedComponent(Graph graph)
         {
-            marked = new bool[graph.Nodes];
-            id = new int[graph.Nodes];
+            marked = new bool[graph.Vertices];
+            id = new int[graph.Vertices];
 
-            for(int i = 0; i < graph.Nodes; i++)
+            for(int i = 0; i < graph.Vertices; i++)
             {
                 if(!marked[i])
                 {
@@ -26,9 +26,9 @@
             return id[v] == id[w];
         }
 
-        public int Id(int node)
+        public int Id(int vertex)
         {
-            return id[node];
+            return id[vertex];
         }
 
         public int Count()
@@ -36,11 +36,11 @@
             return count;
         }
 
-        private void Dfs(Graph graph, int node)
+        private void Dfs(Graph graph, int vertex)
         {
-            marked[node] = true;
-            id[node] = count;
-            foreach(var w in graph.Adjacency(node))
+            marked[vertex] = true;
+            id[vertex] = count;
+            foreach(var w in graph.Adjacency(vertex))
             {
                 if (!marked[w])
                     Dfs(graph, w);

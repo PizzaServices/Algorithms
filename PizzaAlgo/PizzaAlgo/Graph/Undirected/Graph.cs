@@ -7,17 +7,17 @@ namespace PizzaAlgo.Graph
 {
     public class Graph
     {
-        public int Nodes { get; private set; } 
+        public int Vertices { get; private set; } 
         public int Edges { get; private set; }
 
         private Bag<int>[] adj;
 
-        public Graph(int numberOfNodes)
+        public Graph(int numberOfVertices)
         {
-            Nodes = numberOfNodes;
+            Vertices = numberOfVertices;
             Edges = 0;
-            adj = new Bag<int>[numberOfNodes];
-            for(int i = 0; i < numberOfNodes; i++)
+            adj = new Bag<int>[numberOfVertices];
+            for(int i = 0; i < numberOfVertices; i++)
             {
                 adj[i] = new Bag<int>();
             }
@@ -30,16 +30,16 @@ namespace PizzaAlgo.Graph
             Edges++;
         }
 
-        public IEnumerable<int> Adjacency(int node)
+        public IEnumerable<int> Adjacency(int vertex)
         {
-            return adj[node];
+            return adj[vertex];
         }
 
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
-            s.Append(Nodes + " vertices, " + Edges + " edges \n");
-            for (int v = 0; v < Nodes; v++)
+            s.Append(Vertices + " vertices, " + Edges + " edges \n");
+            for (int v = 0; v < Vertices; v++)
             {
                 s.Append(v + ": ");
                 foreach (var w in adj[v])
@@ -51,16 +51,16 @@ namespace PizzaAlgo.Graph
             return s.ToString();
         }
 
-        public int Degree(int node)
+        public int Degree(int vertex)
         {
-            ValidateVertex(node);
-            return adj[node].Size();
+            ValidateVertex(vertex);
+            return adj[vertex].Size();
         }
 
         public int maxDegree()
         {
             int max = 0;
-            for(int i = 0; i < Nodes; i++)
+            for(int i = 0; i < Vertices; i++)
             {
                 if (Degree(i) > max)
                     max = Degree(i);
@@ -71,13 +71,13 @@ namespace PizzaAlgo.Graph
 
         public double AvgDegree()
         {
-            return 2 * Edges / Nodes;
+            return 2 * Edges / Vertices;
         }
 
         public int NumberOfSelfLoops()
         {
             int count = 0;
-            for(int i = 0; i < Nodes; i++)
+            for(int i = 0; i < Vertices; i++)
             {
                 foreach(var edge in Adjacency(i))
                 {
@@ -89,9 +89,9 @@ namespace PizzaAlgo.Graph
             return count / 2;
         }
 
-        private void ValidateVertex(int node)
+        private void ValidateVertex(int vertex)
         {
-            if (node < 0 || node > Nodes)
+            if (vertex < 0 || vertex > Vertices)
                 throw new ArgumentException();
         }
     }
