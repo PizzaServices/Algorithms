@@ -1,2 +1,2 @@
-# PizzaAlgo
+# Algortihms
 Implementation of algorithm for education
