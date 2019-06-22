@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using PizzaAlgo.Graph.EdgeWeightedDirected;
 
 namespace PizzaAlgo.Graph.Directed
 {
     public class Topological
     {
-        private IEnumerable<int> order;
+        private readonly IEnumerable<int> order;
 
         public Topological(Digraph digraph)
         {
@@ -12,6 +13,16 @@ namespace PizzaAlgo.Graph.Directed
             if(!cycleFinder.HasCycle())
             {
                 var dfs = new DepthFirstOrder(digraph);
+                order = dfs.ReversePost();
+            }
+        }
+
+        public Topological(EdgeWeightedDigraph graph)
+        {
+            var finder = new EdgeWeightedDirectedCycle(graph);
+            if (!finder.HasCycle())
+            {
+                DepthFirstOrder dfs = new DepthFirstOrder(graph);
                 order = dfs.ReversePost();
             }
         }

@@ -1,59 +1,125 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using PizzaAlgo.Graph.EdgeWeightedDirected;
 
 namespace PizzaAlgo.Graph.Directed
 {
     public class DepthFirstOrder
     {
-        private bool[] marked;
+        private bool[] marked;         
+        private int[] pre;                
+        private int[] post;                
+        private Queue<int> preorder;   
+        private Queue<int> postorder;  
+        private int preCounter;            
+        private int postCounter;           
 
-        private Queue<int> pre;
-        private Queue<int> post;
-        private Stack<int> reversePost;
-
-        public DepthFirstOrder(Digraph digraph)
+        public DepthFirstOrder(Digraph graph)
         {
-            pre = new Queue<int>();
-            post = new Queue<int>();
-            reversePost = new Stack<int>();
-            marked = new bool[digraph.Vertices];
+            pre = new int[graph.Vertices];
+            post = new int[graph.Vertices];
+            postorder = new Queue<int>();
+            preorder = new Queue<int>();
+            marked = new bool[graph.Vertices];
+            for (int v = 0; v < graph.Vertices; v++)
+                if (!marked[v]) Dfs(graph, v);
+        }
 
-            for(int v = 0; v < digraph.Vertices; v++)
+        public DepthFirstOrder(EdgeWeightedDigraph graph)
+        {
+            pre = new int[graph.Vertices];
+            post = new int[graph.Vertices];
+            postorder = new Queue<int>();
+            preorder = new Queue<int>();
+            marked = new bool[graph.Vertices];
+            for (int v = 0; v < graph.Vertices; v++)
+                if (!marked[v]) Dfs(graph, v);
+        }
+
+        private void Dfs(Digraph graph, int vertex)
+        {
+            marked[vertex] = true;
+            pre[vertex] = preCounter++;
+            preorder.Enqueue(vertex);
+            foreach (var w in graph.Adjacency(vertex))
             {
-                if (!marked[v])
-                    Dfs(digraph, v);
+                if (!marked[w])
+                {
+                    Dfs(graph, w);
+                }
             }
+            postorder.Enqueue(vertex);
+            post[vertex] = postCounter++;
+        }
+
+        private void Dfs(EdgeWeightedDigraph graph, int vertex)
+        {
+            marked[vertex] = true;
+            pre[vertex] = preCounter++;
+            preorder.Enqueue(vertex);
+            foreach (var edge in graph.Adj(vertex))
+            {
+                int w = edge.DestinationVertex;
+                if (!marked[w])
+                {
+                    Dfs(graph, w);
+                }
+            }
+            postorder.Enqueue(vertex);
+            post[vertex] = postCounter++;
+        }
+
+        public int Pre(int vertex)
+        {
+            return pre[vertex];
+        }
+
+        public int Post(int vertex)
+        {
+            return post[vertex];
+        }
+
+
+        public IEnumerable<int> Post()
+        {
+            return postorder;
         }
 
         public IEnumerable<int> Pre()
         {
-            return pre;
-        }
-
-        public IEnumerable<int> Post()
-        {
-            return post;
+            return preorder;
         }
 
         public IEnumerable<int> ReversePost()
         {
-            return reversePost;
+            Stack<int> reverse = new Stack<int>();
+            foreach (int v in postorder)
+                reverse.Push(v);
+            return reverse;
         }
 
-        private void Dfs(Digraph digraph, int vertex)
+        private bool Check()
         {
-            pre.Enqueue(vertex);
-
-            marked[vertex] = true;
-            foreach(var w in digraph.Adjacency(vertex))
+            int r = 0;
+            foreach (int v in Post())
             {
-                if (!marked[w])
-                    Dfs(digraph, w);
+                if (Post(v) != r)
+                {
+                    return false;
+                }
+                r++;
             }
 
-            post.Enqueue(vertex);
-            reversePost.Push(vertex);
+            r = 0;
+            foreach (int v in Pre())
+            {
+                if (Pre(v) != r)
+                {
+                    return false;
+                }
+                r++;
+            }
+
+            return true;
         }
     }
 }
