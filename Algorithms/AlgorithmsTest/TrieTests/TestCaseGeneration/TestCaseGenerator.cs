@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace PizzaAlgoTest.TrieTests.TestCaseGeneration
+namespace AlgorithmsTest.TrieTests.TestCaseGeneration
 {
     [TestFixture]
     public class TestCaseGenerator

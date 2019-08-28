@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Algorithms.Tries;
 using Algorithms.Tries.PatriciaTrie;
 
-namespace PizzaAlgoTest.TrieTests
+namespace AlgorithmsTest.TrieTests
 {
     public class SuffixTrieTest
     {

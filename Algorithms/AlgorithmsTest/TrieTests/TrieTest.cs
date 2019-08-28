@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Algorithms.Tries;
 using Algorithms.Tries.Trie;
 
-namespace PizzaAlgoTest.TrieTests
+namespace AlgorithmsTest.TrieTests
 {
     public class TrieTest : BaseTrieTest
     {

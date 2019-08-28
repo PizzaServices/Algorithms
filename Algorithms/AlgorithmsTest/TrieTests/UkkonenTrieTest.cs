@@ -2,7 +2,7 @@
 using Algorithms.Tries;
 using Algorithms.Tries.Ukkonen;
 
-namespace PizzaAlgoTest.TrieTests
+namespace AlgorithmsTest.TrieTests
 {
     [TestFixture]
     public class UkkonenTrieTest : SuffixTrieTest

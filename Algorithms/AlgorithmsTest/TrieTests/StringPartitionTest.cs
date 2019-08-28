@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Algorithms.Tries.PatriciaTrie;
 
-namespace PizzaAlgoTest.TrieTests
+namespace AlgorithmsTest.TrieTests
 {
     [TestFixture]
     public class StringPartitionTest

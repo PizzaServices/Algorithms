@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PizzaAlgoTest.TrieTests.TestCaseGeneration
+namespace AlgorithmsTest.TrieTests.TestCaseGeneration
 {
     public static class NonsenseGeneration
     {
         public const int DefaultAverageWordCount = 15;
-        public const string VocabularyFileName = "D:\\CSharp\\Algorithm\\ClassLibrary\\PizzaAlgo\\PizzaAlgoTest\\TrieTests\\TestCaseGeneration\\english-words.txt";
+        public const string VocabularyFileName = "english-words.txt";
 
         public static string[] GetVocabulary()
         {
@@ -83,7 +82,12 @@ namespace PizzaAlgoTest.TrieTests.TestCaseGeneration
 
         public static IEnumerable<string> GetWords(string fileName)
         {
-            using (var stream = new FileStream(fileName, FileMode.Open))
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            string directory = Path.GetDirectoryName(path) + "\\TrieTests\\TestCaseGeneration\\";
+
+            using (var stream = new FileStream(directory + fileName, FileMode.Open))
             {
                 Debug.Assert(stream != null, "Could not find resource {0}", fileName);
                 using (var file = new StreamReader(stream))

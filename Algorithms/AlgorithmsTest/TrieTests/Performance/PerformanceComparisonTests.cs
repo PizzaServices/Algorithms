@@ -9,9 +9,9 @@ using Algorithms.Tries;
 using Algorithms.Tries.PatriciaTrie;
 using Algorithms.Tries.Trie;
 using Algorithms.Tries.Ukkonen;
-using PizzaAlgoTest.TrieTests.TestCaseGeneration;
+using AlgorithmsTest.TrieTests.TestCaseGeneration;
 
-namespace PizzaAlgoTest.TrieTests.Performance
+namespace AlgorithmsTest.TrieTests.Performance
 {
     [TestFixture]
     [Explicit]

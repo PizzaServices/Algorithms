@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Algorithms.Tries;
 
-namespace PizzaAlgoTest.TrieTests.Performance
+namespace AlgorithmsTest.TrieTests.Performance
 {
     public class FakeTrie<T> : ITrie<T>
     {

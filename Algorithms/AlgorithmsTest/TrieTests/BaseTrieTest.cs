@@ -4,7 +4,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Algorithms.Tries;
 
-namespace PizzaAlgoTest.TrieTests
+namespace AlgorithmsTest.TrieTests
 {
     [TestFixture]
     public abstract class BaseTrieTest
