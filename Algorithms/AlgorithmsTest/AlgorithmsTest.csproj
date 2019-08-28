@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SortingTests\TestDataGeneration\random-numbers.txt" />
     <None Remove="TrieTests\TestCaseGeneration\english-words.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="SortingTests\TestDataGeneration\random-numbers.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TrieTests\TestCaseGeneration\english-words.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,20 +1,22 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Algorithms.Sorting
 {
-    public class QuickSort<T> : SortingBase<T> where T : IComparable<T>
+    public static class QuickSorter
     {
-        public static void Sort(T[] a)
+        public static void QuickSort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            Sort(a, 0, a.Length - 1);
+            comparer ??= Comparer<T>.Default;
+            Sort(collection, 0, collection.Count - 1, comparer);
         }
 
-        public static void ThreeWaySort(T[] a)
+        public static void ThreeWaySort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            ThreeWaySort(a, 0, a.Length - 1);
+            comparer ??= Comparer<T>.Default;
+            ThreeWaySort(collection, 0, collection.Count - 1, comparer);
         }
 
-        private static void ThreeWaySort(T[] a, int lo, int hi)
+        private static void ThreeWaySort<T>(IList<T> collection, int lo, int hi, IComparer<T> comparer)
         {
             if (hi <= lo)
                 return;
@@ -23,53 +25,53 @@ namespace Algorithms.Sorting
             int i = lo + 1;
             int gt = hi;
 
-            var v = a[lo];
+            var v = collection[lo];
             while(i <= gt)
             {
-                int cmp = a[i].CompareTo(v);
+                int cmp = comparer.Compare(collection[i], v);
                 if (cmp < 0)
-                    exch(a, lt++, i++);
+                    SortingBase.Exch(collection, lt++, i++);
                 else if (cmp > 0)
-                    exch(a, i, gt--);
+                    SortingBase.Exch(collection, i, gt--);
                 else
                     i++;
             }
-            Sort(a, lo, lt - 1);
-            Sort(a, gt + 1, hi);
+            Sort(collection, lo, lt - 1, comparer);
+            Sort(collection, gt + 1, hi, comparer);
         }
 
-        private static void Sort(T[] a, int lo, int hi)
+        private static void Sort<T>(IList<T> collection, int lo, int hi, IComparer<T> comparer)
         {
             if (hi <= lo)
                 return;
 
-            int j = Partition(a, lo, hi);
-            Sort(a, lo, j - 1);
-            Sort(a, j + 1, hi);
+            int j = Partition(collection, lo, hi, comparer);
+            Sort(collection, lo, j - 1, comparer);
+            Sort(collection, j + 1, hi, comparer);
         }
 
-        private static int Partition(T[] a, int lo, int hi)
+        private static int Partition<T>(IList<T> collection, int lo, int hi, IComparer<T> comparer)
         {
             int i = lo;
             int j = hi + 1;
 
-            var v = a[lo];
+            var v = collection[lo];
             while(true)
             {
-                while (less(a[++i], v))
-                    if (j == hi)
+                while (SortingBase.Less(collection[++i], v, comparer))
+                    if (i == hi)
                         break;
 
-                while (less(v, a[--j]))
+                while (SortingBase.Less(v, collection[--j], comparer))
                     if (j == lo)
                         break;
 
                 if (i >= j)
                     break;
 
-                exch(a, i, j);
+                SortingBase.Exch(collection, i, j);
             }
-            exch(a, lo, j);
+            SortingBase.Exch(collection, lo, j);
             return j;
         }
     }

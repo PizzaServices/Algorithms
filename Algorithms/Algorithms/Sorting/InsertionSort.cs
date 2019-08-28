@@ -1,17 +1,19 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Algorithms.Sorting
 {
-    public class InsertionSort<T> : SortingBase<T> where T : IComparable<T>
+    public static class InsertionSorter
     {
-        public static void sort(T[] a)
+        public static void InsertionSort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            int n = a.Length;
+            comparer ??= Comparer<T>.Default;
+
+            int n = collection.Count;
             for(int i = 1; i < n; i++)
             {
-                for(int j = i; j > 0 && less(a[j], a[j-1]); j--)
+                for(int j = i; j > 0 && SortingBase.Less((T)collection[j], (T)collection[j-1], comparer); j--)
                 {
-                    exch(a, j, j - 1);
+                    SortingBase.Exch(collection, j, j - 1);
                 }
             }
         }

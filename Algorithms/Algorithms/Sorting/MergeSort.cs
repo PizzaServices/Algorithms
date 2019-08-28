@@ -1,57 +1,69 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Algorithms.Sorting
 {
-    public class MergeSort<T> : SortingBase<T> where T : IComparable<T>
+    public static class MergeSorter
     {
-        private static T[] aux;
-
-        public static void SortTopDown(T[] a)
+        public static void SortTopDown<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            aux = new T[a.Length];
-            SortTopDown(a, 0, a.Length - 1);
+            comparer ??= Comparer<T>.Default;
+            var aux = new T[collection.Count];
+            SortTopDown(collection, 0, collection.Count - 1, aux, comparer);
         }
 
-        public static void SortBottomUp(T[] a)
+        public static void SortBottomUp<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            int n = a.Length;
-            aux = new T[a.Length];
+            comparer ??= Comparer<T>.Default;
+            int n = collection.Count;
+            var aux = new T[collection.Count];
 
             for (int sz = 1; sz < n; sz = sz + sz)
                 for (int lo = 0; lo < n - sz; lo += sz + sz)
-                    Merge(a, lo, lo + sz - 1, Math.Min(lo + sz + sz - 1, n - 1));
+                    Merge(collection, lo, lo + sz - 1, Math.Min(lo + sz + sz - 1, n - 1), aux, comparer);
         }
 
-        public static void Merge(T[] a, int lo, int mid, int hi)
+        private static void Merge<T>(IList<T> collection, int lo, int mid, int hi, T[] aux, IComparer<T> comparer)
         {
+            Debug.Assert(IsSorted(collection, lo, mid, comparer));
+            Debug.Assert(IsSorted(collection, mid+1, hi, comparer));
+
             int i = lo;
             int j = mid + 1;
 
             for (int k = lo; k <= hi; k++)
-                aux[k] = a[k];
+                aux[k] = collection[k];
 
             for(int k = lo; k <= hi; k++)
             {
                 if (i > mid)
-                    a[k] = aux[j++];
+                    collection[k] = aux[j++];
                 else if (j > hi)
-                    a[k] = aux[j++];
-                else if (less(aux[j], aux[i]))
-                    a[k] = aux[j++];
+                    collection[k] = aux[i++];
+                else if (SortingBase.Less(aux[j], aux[i], comparer))
+                    collection[k] = aux[j++];
                 else
-                    a[k] = aux[i++];
+                    collection[k] = aux[i++];
             }
         }
 
-        private static void SortTopDown(T[] a, int lo, int hi)
+        private static void SortTopDown<T>(IList<T> collection, int lo, int hi, T[] aux, IComparer<T> comparer)
         {
             if (hi <= lo)
                 return;
 
             int mid = lo + (hi - lo) / 2;
-            SortTopDown(a, lo, mid);
-            SortTopDown(a, mid + 1, hi);
-            Merge(a, lo, mid, hi);
+            SortTopDown(collection, lo, mid, aux, comparer);
+            SortTopDown(collection, mid+1, hi, aux, comparer);
+            Merge(collection, lo, mid, hi, aux, comparer);
+        }
+
+        private static bool IsSorted<T>(IList<T> collection, int lo, int hi, IComparer<T> comparer)
+        {
+            for (int i = lo + 1; i <= hi; i++)
+                if (SortingBase.Less(collection[i], collection[i - 1], comparer)) return false;
+            return true;
         }
     }
 }

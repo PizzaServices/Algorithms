@@ -1,26 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Algorithms.Sorting
 {
-    public abstract class SortingBase<T> where T : IComparable<T>
+    internal static class SortingBase
     {
-        protected static bool less(T v, T w)
+        public static bool Less<T>(T v, T w, IComparer<T> comparer)
         {
-            return v.CompareTo(w) < 0;
+            return comparer.Compare(v, w) < 0;
         }
 
-        protected static void exch(T[] a, int i, int j)
+        public static void Exch<T>(IList<T> collection, int i, int j)
         {
-            var t = a[i];
-            a[i] = a[j];
-            a[j] = t;
+            var tmp = collection[i];
+            collection[i] = collection[j];
+            collection[j] = tmp;
         }
 
-        protected static bool isSorted(T[] a)
+        public static bool IsSorted<T>(IList<T> collection, IComparer<T> comparer)
         {
-            for(int i = 1; i < a.Length; i++)
+            for(int i = 1; i < collection.Count; i++)
             {
-                if (less(a[i], a[i - 1]))
+                if (Less(collection[i], collection[i - 1], comparer))
                     return false;
             }
 

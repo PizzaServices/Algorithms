@@ -1,21 +1,22 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Algorithms.Sorting
 {
-    public class SelectionSort<T> : SortingBase<T> where T : IComparable<T>
+    public static class SelectionSorter
     {
-        public static void sort(T[] a)
+        public static void SelectionSort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            int n = a.Length;
+            comparer ??= Comparer<T>.Default;
+            int n = collection.Count;
             for(int i = 0; i < n; i++)
             {
                 int min = i;
                 for(int j = i+1; j < n; j++)
                 {
-                    if (less(a[j], a[min]))
+                    if (SortingBase.Less(collection[j], collection[min], comparer))
                         min = j;
                 }
-                exch(a, i, min);
+                SortingBase.Exch(collection, i, min);
             }
         }
     }

@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Algorithms.Sorting
 {
-    public class ShellSort<T> : SortingBase<T> where T : IComparable<T>
+    public static class ShellSorter
     {
-        public static void sort(T[] a)
+        public static void ShellSort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
-            int n = a.Length;
+            comparer ??= Comparer<T>.Default;
+
+            int n = collection.Count;
             int h = 1;
             while(h < n/3)
             {
@@ -17,9 +20,9 @@ namespace Algorithms.Sorting
             {
                 for(int i = h; i < n; i++)
                 {
-                    for(int j = i; j >= h && less(a[j], a[j-h]); j -= h)
+                    for(int j = i; j >= h && SortingBase.Less((T)collection[j], (T)collection[j-h], comparer); j -= h)
                     {
-                        exch(a, j, j - h);
+                        SortingBase.Exch(collection, j, j - h);
                     }
                 }
                 h /= 3;
