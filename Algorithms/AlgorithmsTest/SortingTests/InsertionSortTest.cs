@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Channels;
 using Algorithms.Sorting;
 using AlgorithmsTest.SortingTests.TestDataGeneration;
 using NUnit.Framework;
