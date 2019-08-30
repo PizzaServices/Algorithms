@@ -19,13 +19,18 @@ namespace AlgorithmsTest.SortingTests.TestDataGeneration
             if (count > 10000)
                 count = 10000;
 
-            var list = GetNumbers(_fileName);
+            var list = GetNumbers(_fileName, count);
             UnsortedList = list;
-            SortedList = list.OrderBy(number => number);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            SortedList = list.OrderBy(number => number).ToList();
+            stopwatch.Stop();
+            Console.WriteLine("C# Sorting-Algorithm: {0}", stopwatch.Elapsed);
             return list;
         }
 
-        private static IEnumerable<int> GetNumbers(string fileName)
+        private static IEnumerable<int> GetNumbers(string fileName, int count)
         {
             string codeBase = Assembly.GetExecutingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
@@ -37,9 +42,10 @@ namespace AlgorithmsTest.SortingTests.TestDataGeneration
                 Debug.Assert(stream != null, "Could not find resource {0}", fileName);
                 using (var file = new StreamReader(stream))
                 {
-                    while (!file.EndOfStream)
+                    while (!file.EndOfStream || count == 0)
                     {
                         string line = file.ReadLine() ?? string.Empty;
+                        --count; 
 
                         if (int.TryParse(line, out var result))
                             yield return result;
