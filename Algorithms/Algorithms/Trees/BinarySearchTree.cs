@@ -23,32 +23,32 @@ namespace Algorithms.Trees
 
         public int Size()
         {
-            return size(root);
+            return Size(root);
         }
 
         public TValue Get(TKey key)
         {
-            return get(root, key);
+            return Get(root, key);
         }
 
-        public void Put(TKey key, TValue value)
+        public void Insert(TKey key, TValue value)
         {
-            root = put(root, key, value);
+            root = Insert(root, key, value);
         }
 
         public TKey Min()
         {
-            return min(root).Key;
+            return Min(root).Key;
         }
 
         public TKey Max()
         {
-            return max(root).Key;
+            return Max(root).Key;
         }
 
         public TKey Floor(TKey key)
         {
-            Node x = floor(root, key);
+            Node x = Floor(root, key);
             if (x == null)
                 return default;
             return x.Key;
@@ -56,7 +56,7 @@ namespace Algorithms.Trees
 
         public TKey Ceiling(TKey key)
         {
-            Node x = ceiling(root, key);
+            Node x = Ceiling(root, key);
             if (x == null)
                 return default;
             return x.Key;
@@ -64,27 +64,27 @@ namespace Algorithms.Trees
 
         public TKey Select(int k)
         {
-            return select(root, k).Key;
+            return Select(root, k).Key;
         }
 
         public int Rank(TKey key)
         {
-            return rank(key, root);
+            return Rank(key, root);
         }
 
-        public void DeleteMin()
+        public void RemoveMin()
         {
-            root = deleteMin(root);
+            root = RemoveMin(root);
         }
 
-        public void DeleteMax()
+        public void RemoveMax()
         {
-            root = deleteMax(root);
+            root = RemoveMax(root);
         }
 
-        public void Delete(TKey key)
+        public void Remove(TKey key)
         {
-            root = delete(root, key);
+            root = Remove(root, key);
         }
 
         public IEnumerable<TKey> Keys()
@@ -95,11 +95,11 @@ namespace Algorithms.Trees
         public IEnumerable<TKey> Keys(TKey lo, TKey hi)
         {
             Queue<TKey> queue = new Queue<TKey>();
-            keys(root, queue, lo, hi);
+            Keys(root, queue, lo, hi);
             return queue;
         }
 
-        private int size(Node x)
+        private int Size(Node x)
         {
             if (x == null)
                 return 0;
@@ -107,7 +107,7 @@ namespace Algorithms.Trees
                 return x.N;
         }
 
-        private TValue get(Node x, TKey key)
+        private TValue Get(Node x, TKey key)
         {
             if (x == null)
                 return default;
@@ -115,45 +115,45 @@ namespace Algorithms.Trees
             int cmp = key.CompareTo(x.Key);
 
             if (cmp < 0)
-                return get(x.Left, key);
+                return Get(x.Left, key);
             else if (cmp > 0)
-                return get(x.Right, key);
+                return Get(x.Right, key);
             else
                 return x.Value;
         }
 
-        private Node put(Node x, TKey key, TValue value)
+        private Node Insert(Node x, TKey key, TValue value)
         {
             if (x == null)
                 return new Node(key, value, 1);
 
             int cmp = key.CompareTo(x.Key);
             if (cmp < 0)
-                x.Left = put(x.Left, key, value);
+                x.Left = Insert(x.Left, key, value);
             else if (cmp > 0)
-                x.Right = put(x.Right, key, value);
+                x.Right = Insert(x.Right, key, value);
             else
                 x.Value = value;
 
-            x.N = size(x.Left) + size(x.Right) + 1;
+            x.N = Size(x.Left) + Size(x.Right) + 1;
             return x;
         }
 
-        private Node min(Node x)
+        private Node Min(Node x)
         {
             if (x.Left == null)
                 return x;
-            return min(x.Left);
+            return Min(x.Left);
         }
 
-        private Node max(Node x)
+        private Node Max(Node x)
         {
             if (x.Right == null)
                 return x;
-            return max(x.Right);
+            return Max(x.Right);
         }
 
-        private Node floor(Node x, TKey key)
+        private Node Floor(Node x, TKey key)
         {
             if (x == null)
                 return null;
@@ -163,9 +163,9 @@ namespace Algorithms.Trees
                 return x;
 
             if (cmp < 0)
-                return floor(x.Left, key);
+                return Floor(x.Left, key);
 
-            Node t = floor(x.Right, key);
+            Node t = Floor(x.Right, key);
 
             if (t != null)
                 return t;
@@ -173,7 +173,7 @@ namespace Algorithms.Trees
                 return x;
         }
 
-        private Node ceiling(Node x, TKey key)
+        private Node Ceiling(Node x, TKey key)
         {
             if (x == null)
                 return null;
@@ -183,9 +183,9 @@ namespace Algorithms.Trees
                 return x;
 
             if (cmp > 0)
-                return floor(x.Right, key);
+                return Floor(x.Right, key);
 
-            Node t = floor(x.Left, key);
+            Node t = Floor(x.Left, key);
 
             if (t != null)
                 return t;
@@ -193,22 +193,22 @@ namespace Algorithms.Trees
                 return x;
         }
 
-        private Node select(Node x, int k)
+        private Node Select(Node x, int k)
         {
             if (x == null)
                 return null;
 
-            int t = size(x.Left);
+            int t = Size(x.Left);
 
             if (t > k)
-                return select(x.Left, k);
+                return Select(x.Left, k);
             else if (t < k)
-                return select(x.Right, k - t - 1);
+                return Select(x.Right, k - t - 1);
             else
                 return x;
         }
 
-        private int rank(TKey key, Node x)
+        private int Rank(TKey key, Node x)
         {
             if (x == null)
                 return 0;
@@ -216,34 +216,34 @@ namespace Algorithms.Trees
             int cmp = key.CompareTo(x.Key);
 
             if (cmp < 0)
-                return rank(key, x.Left);
+                return Rank(key, x.Left);
             else if (cmp > 0)
-                return 1 + rank(key, x.Right);
+                return 1 + Rank(key, x.Right);
             else
-                return size(x.Left);
+                return Size(x.Left);
         }
 
-        private Node deleteMin(Node x)
+        private Node RemoveMin(Node x)
         {
             if (x.Left == null)
                 return x.Right;
 
-            x.Left = deleteMin(x.Left);
-            x.N = size(x.Left) + size(x.Right) + 1;
+            x.Left = RemoveMin(x.Left);
+            x.N = Size(x.Left) + Size(x.Right) + 1;
             return x;
         }
 
-        private Node deleteMax(Node x)
+        private Node RemoveMax(Node x)
         {
             if (x.Right == null)
-                return x.Right;
+                return x.Left;
 
-            x.Right = deleteMax(x.Right);
-            x.N = size(x.Left) + size(x.Right) + 1;
+            x.Right = RemoveMax(x.Right);
+            x.N = Size(x.Left) + Size(x.Right) + 1;
             return x;
         }
 
-        private Node delete(Node x, TKey key)
+        private Node Remove(Node x, TKey key)
         {
             if (x == null)
                 return null;
@@ -251,9 +251,9 @@ namespace Algorithms.Trees
             int cmp = key.CompareTo(x.Key);
 
             if (cmp < 0)
-                x.Left = delete(x.Left, key);
+                x.Left = Remove(x.Left, key);
             else if (cmp > 0)
-                x.Right = delete(x.Right, key);
+                x.Right = Remove(x.Right, key);
             else
             {
                 if (x.Right == null)
@@ -262,15 +262,15 @@ namespace Algorithms.Trees
                     return x.Right;
 
                 Node t = x;
-                x = min(t.Right);
-                x.Right = deleteMin(t.Right);
+                x = Min(t.Right);
+                x.Right = RemoveMin(t.Right);
                 x.Left = t.Left;
             }
-            x.N = size(x.Left) + size(x.Right) + 1;
+            x.N = Size(x.Left) + Size(x.Right) + 1;
             return x;
         }
 
-        private void keys(Node x, Queue<TKey> queue, TKey lo, TKey hi)
+        private void Keys(Node x, Queue<TKey> queue, TKey lo, TKey hi)
         {
             if (x == null)
                 return;
@@ -279,11 +279,11 @@ namespace Algorithms.Trees
             int cmphi = hi.CompareTo(x.Key);
 
             if (cmplo < 0)
-                keys(x.Left, queue, lo, hi);
+                Keys(x.Left, queue, lo, hi);
             if (cmplo <= 0 && cmphi >= 0)
                 queue.Enqueue(x.Key);
             if (cmphi > 0)
-                keys(x.Right, queue, lo, hi);
+                Keys(x.Right, queue, lo, hi);
         }
     }
 }
