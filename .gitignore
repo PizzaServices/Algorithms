@@ -235,3 +235,6 @@ _Pvt_Extensions
 
 #Exclude code coverage
 /SchoolProjectTest/BuildReports/Coverage/*.*
+
+#vscode files
+.vscode/*
