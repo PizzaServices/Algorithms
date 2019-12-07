@@ -11,6 +11,8 @@ namespace AlgorithmsTest.SortingTests.TestDataGeneration
     {
         private readonly string _fileName = "random-numbers.txt";
 
+        private static IEnumerable<int> _numbers;
+
         public IEnumerable<int> UnsortedList { get; private set; }
         public IEnumerable<int> SortedList { get; private set; }
 
@@ -19,7 +21,10 @@ namespace AlgorithmsTest.SortingTests.TestDataGeneration
             if (count > 10000)
                 count = 10000;
 
-            var list = GetNumbers(_fileName, count);
+            if (_numbers == null)
+                _numbers = GetNumbers(_fileName, 10000);
+
+            var list = _numbers.Take(count).ToList();
             UnsortedList = list;
 
             var stopwatch = new Stopwatch();
