@@ -8,282 +8,387 @@ namespace Algorithms.Trees
         private Node root;
         private class Node
         {
-            public TKey Key { get; set; }
+            public TKey Key { get; }
             public TValue Value { get; set; }
             public Node Left { get; set; }
             public Node Right { get; set; }
-            public int N { get; set; }
-            public Node(TKey key, TValue value, int n)
+            public int SubTreeSize { get; set; }
+            public Node(TKey key, TValue value, int subTreeSize)
             {
                 Key = key;
                 Value = value;
-                N = n;
+                SubTreeSize = subTreeSize;
             }
         }
 
+        /// <summary>
+        /// Does this symbol table contain the given key?
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <returns>
+        ///     <see langword="true" /> if this symbol table contains <paramref name="key"/> and <see langword="false" /> otherwise
+        /// </returns>
+        public bool Contains(TKey key)
+        {
+            if (key == null)
+                return false;
+
+            return Get(key) != null;
+        }
+
+        /// <summary>
+        /// Returns the number of key-value pairs in this symbol table.
+        /// </summary>
+        /// <returns>the number of key-value pairs in this symbol table</returns>
         public int Size()
         {
             return Size(root);
         }
 
+        /// <summary>
+        /// Returns the value associated with the given key.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <returns>
+        ///     the value associated with the given key if the key is in the symbol table
+        ///     and <see langword="null" /> if the key is not in the symbol table
+        /// </returns>
         public TValue Get(TKey key)
         {
             return Get(root, key);
         }
 
+        /// <summary>
+        /// Inserts the specified key-value pair into the symbol table, overwriting the old
+        /// value with the new value if the symbol table already contains the specified key.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <param name="value"> the value</param>
         public void Insert(TKey key, TValue value)
         {
             root = Insert(root, key, value);
         }
 
+        /// <summary>
+        /// Returns the smallest key in the symbol table.
+        /// </summary>
+        /// <returns>the smallest key in the symbol table</returns>
         public TKey Min()
         {
             return Min(root).Key;
         }
 
+        /// <summary>
+        /// Returns the largest key in the symbol table.
+        /// </summary>
+        /// <returns>the largest key in the symbol table</returns>
         public TKey Max()
         {
             return Max(root).Key;
         }
 
+        /// <summary>
+        /// Returns the largest key in the symbol table less than or equal to <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <returns>the largest key in the symbol table less than or equal to <paramref name="key"/></returns>
         public TKey Floor(TKey key)
         {
-            Node x = Floor(root, key);
-            if (x == null)
-                return default;
-            return x.Key;
+            var node = Floor(root, key);
+            return node == null ? default : node.Key;
         }
 
+        /// <summary>
+        /// Returns the smallest key in the symbol table greater than or equal to <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <returns>the smallest key in the symbol table greater than or equal to <paramref name="key"/></returns>
         public TKey Ceiling(TKey key)
         {
-            Node x = Ceiling(root, key);
-            if (x == null)
-                return default;
-            return x.Key;
+            var node = Ceiling(root, key);
+            return node == null ? default : node.Key;
         }
 
-        public TKey Select(int k)
+        /// <summary>
+        /// Return the key in the symbol table whose rank is <paramref name="rank"/>.
+        /// This is the(k+1)st smallest key in the symbol table.
+        /// </summary>
+        /// <param name="rank">the order statistic</param>
+        /// <returns>the key in the symbol table of rank <paramref name="rank"/></returns>
+        public TKey Select(int rank)
         {
-            return Select(root, k).Key;
+            if (rank < 0 || rank > Size())
+                return default;
+
+            return Select(root, rank).Key;
         }
 
+        /// <summary>
+        /// Return the number of keys in the symbol table strictly less than <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <returns>the number of keys in the symbol table strictly less than <paramref name="key"/></returns>
         public int Rank(TKey key)
         {
             return Rank(key, root);
         }
 
+        /// <summary>
+        /// Removes the smallest key and associated value from the symbol table.
+        /// </summary>
         public void RemoveMin()
         {
             root = RemoveMin(root);
         }
 
+        /// <summary>
+        /// Removes the largest key and associated value from the symbol table.
+        /// </summary>
         public void RemoveMax()
         {
             root = RemoveMax(root);
         }
 
+        /// <summary>
+        /// Removes the specified key and its associated value from this symbol table
+        /// (if the key is in this symbol table).
+        /// </summary>
+        /// <param name="key">the key to remove</param>
         public void Remove(TKey key)
         {
             root = Remove(root, key);
         }
 
+        /// <summary>
+        /// Returns all keys in the symbol table.
+        /// </summary>
+        /// <returns>all keys in the symbol table</returns>
         public IEnumerable<TKey> Keys()
         {
             return Keys(Min(), Max());
         }
 
-        public IEnumerable<TKey> Keys(TKey lo, TKey hi)
+        /// <summary>
+        /// Returns all keys in the symbol table in the given range.
+        /// </summary>
+        /// <param name="low">minimum endpoint</param>
+        /// <param name="high">maximum endpoint</param>
+        /// <returns>
+        ///     all keys in the symbol table between <paramref name="low"/> (inclusive) and <paramref name="high"/> (inclusive)
+        /// </returns>
+        public IEnumerable<TKey> Keys(TKey low, TKey high)
         {
-            Queue<TKey> queue = new Queue<TKey>();
-            Keys(root, queue, lo, hi);
+            var queue = new Queue<TKey>();
+            Keys(root, queue, low, high);
             return queue;
         }
 
-        private int Size(Node x)
+        private static int Size(Node node)
         {
-            if (x == null)
-                return 0;
-            else
-                return x.N;
+            return node?.SubTreeSize ?? 0;
         }
 
-        private TValue Get(Node x, TKey key)
+        private static TValue Get(Node node, TKey key)
         {
-            if (x == null)
-                return default;
+            while (true)
+            {
+                if (node == null) return default;
 
-            int cmp = key.CompareTo(x.Key);
+                var cmp = key.CompareTo(node.Key);
 
-            if (cmp < 0)
-                return Get(x.Left, key);
-            else if (cmp > 0)
-                return Get(x.Right, key);
-            else
-                return x.Value;
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                }
+                else if (cmp > 0)
+                {
+                    node = node.Right;
+                }
+                else
+                    return node.Value;
+            }
         }
 
-        private Node Insert(Node x, TKey key, TValue value)
+        private static Node Insert(Node node, TKey key, TValue value)
         {
-            if (x == null)
+            if (node == null)
                 return new Node(key, value, 1);
 
-            int cmp = key.CompareTo(x.Key);
+            var cmp = key.CompareTo(node.Key);
             if (cmp < 0)
-                x.Left = Insert(x.Left, key, value);
+                node.Left = Insert(node.Left, key, value);
             else if (cmp > 0)
-                x.Right = Insert(x.Right, key, value);
+                node.Right = Insert(node.Right, key, value);
             else
-                x.Value = value;
+                node.Value = value;
 
-            x.N = Size(x.Left) + Size(x.Right) + 1;
-            return x;
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
         }
 
-        private Node Min(Node x)
+        private static Node Min(Node node)
         {
-            if (x.Left == null)
-                return x;
-            return Min(x.Left);
+            while (true)
+            {
+                if (node.Left == null) return node;
+                node = node.Left;
+            }
         }
 
-        private Node Max(Node x)
+        private static Node Max(Node node)
         {
-            if (x.Right == null)
-                return x;
-            return Max(x.Right);
+            while (true)
+            {
+                if (node.Right == null) return node;
+                node = node.Right;
+            }
         }
 
-        private Node Floor(Node x, TKey key)
+        private static Node Floor(Node node, TKey key)
         {
-            if (x == null)
+            while (true)
+            {
+                if (node == null) return null;
+
+                var cmp = key.CompareTo(node.Key);
+                if (cmp == 0) return node;
+
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                    continue;
+                }
+
+                var t = Floor(node.Right, key);
+
+                return t ?? node;
+            }
+        }
+
+        private static Node Ceiling(Node node, TKey key)
+        {
+            if (node == null)
                 return null;
 
-            int cmp = key.CompareTo(x.Key);
+            var cmp = key.CompareTo(node.Key);
             if (cmp == 0)
-                return x;
-
-            if (cmp < 0)
-                return Floor(x.Left, key);
-
-            Node t = Floor(x.Right, key);
-
-            if (t != null)
-                return t;
-            else
-                return x;
-        }
-
-        private Node Ceiling(Node x, TKey key)
-        {
-            if (x == null)
-                return null;
-
-            int cmp = key.CompareTo(x.Key);
-            if (cmp == 0)
-                return x;
+                return node;
 
             if (cmp > 0)
-                return Floor(x.Right, key);
+                return Floor(node.Right, key);
 
-            Node t = Floor(x.Left, key);
+            var t = Floor(node.Left, key);
 
-            if (t != null)
-                return t;
-            else
-                return x;
+            return t ?? node;
         }
 
-        private Node Select(Node x, int k)
+        private static Node Select(Node node, int rank)
         {
-            if (x == null)
+            while (true)
+            {
+                if (node == null) return null;
+
+                var t = Size(node.Left);
+
+                if (t > rank)
+                {
+                    node = node.Left;
+                }
+                else if (t < rank)
+                {
+                    node = node.Right;
+                    rank = rank - t - 1;
+                }
+                else
+                    return node;
+            }
+        }
+
+        private static int Rank(TKey key, Node node)
+        {
+            while (true)
+            {
+                if (node == null) return 0;
+
+                var cmp = key.CompareTo(node.Key);
+
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                }
+                else if (cmp > 0)
+                    return 1 + Rank(key, node.Right);
+                else
+                    return Size(node.Left);
+            }
+        }
+
+        private static Node RemoveMin(Node node)
+        {
+            if (node.Left == null)
+                return node.Right;
+
+            node.Left = RemoveMin(node.Left);
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
+        }
+
+        private static Node RemoveMax(Node node)
+        {
+            if (node.Right == null)
+                return node.Left;
+
+            node.Right = RemoveMax(node.Right);
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
+        }
+
+        private static Node Remove(Node node, TKey key)
+        {
+            if (node == null)
                 return null;
 
-            int t = Size(x.Left);
-
-            if (t > k)
-                return Select(x.Left, k);
-            else if (t < k)
-                return Select(x.Right, k - t - 1);
-            else
-                return x;
-        }
-
-        private int Rank(TKey key, Node x)
-        {
-            if (x == null)
-                return 0;
-
-            int cmp = key.CompareTo(x.Key);
+            var cmp = key.CompareTo(node.Key);
 
             if (cmp < 0)
-                return Rank(key, x.Left);
+                node.Left = Remove(node.Left, key);
             else if (cmp > 0)
-                return 1 + Rank(key, x.Right);
-            else
-                return Size(x.Left);
-        }
-
-        private Node RemoveMin(Node x)
-        {
-            if (x.Left == null)
-                return x.Right;
-
-            x.Left = RemoveMin(x.Left);
-            x.N = Size(x.Left) + Size(x.Right) + 1;
-            return x;
-        }
-
-        private Node RemoveMax(Node x)
-        {
-            if (x.Right == null)
-                return x.Left;
-
-            x.Right = RemoveMax(x.Right);
-            x.N = Size(x.Left) + Size(x.Right) + 1;
-            return x;
-        }
-
-        private Node Remove(Node x, TKey key)
-        {
-            if (x == null)
-                return null;
-
-            int cmp = key.CompareTo(x.Key);
-
-            if (cmp < 0)
-                x.Left = Remove(x.Left, key);
-            else if (cmp > 0)
-                x.Right = Remove(x.Right, key);
+                node.Right = Remove(node.Right, key);
             else
             {
-                if (x.Right == null)
-                    return x.Left;
-                if (x.Left == null)
-                    return x.Right;
+                if (node.Right == null)
+                    return node.Left;
+                if (node.Left == null)
+                    return node.Right;
 
-                Node t = x;
-                x = Min(t.Right);
-                x.Right = RemoveMin(t.Right);
-                x.Left = t.Left;
+                var t = node;
+                node = Min(t.Right);
+                node.Right = RemoveMin(t.Right);
+                node.Left = t.Left;
             }
-            x.N = Size(x.Left) + Size(x.Right) + 1;
-            return x;
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
         }
 
-        private void Keys(Node x, Queue<TKey> queue, TKey lo, TKey hi)
+        private static void Keys(Node node, Queue<TKey> queue, TKey low, TKey high)
         {
-            if (x == null)
-                return;
+            while (true)
+            {
+                if (node == null) return;
 
-            int cmplo = lo.CompareTo(x.Key);
-            int cmphi = hi.CompareTo(x.Key);
+                var compareLow = low.CompareTo(node.Key);
+                var compareHigh = high.CompareTo(node.Key);
 
-            if (cmplo < 0)
-                Keys(x.Left, queue, lo, hi);
-            if (cmplo <= 0 && cmphi >= 0)
-                queue.Enqueue(x.Key);
-            if (cmphi > 0)
-                Keys(x.Right, queue, lo, hi);
+                if (compareLow < 0) Keys(node.Left, queue, low, high);
+                if (compareLow <= 0 && compareHigh >= 0) queue.Enqueue(node.Key);
+                if (compareHigh > 0)
+                {
+                    node = node.Right;
+                    continue;
+                }
+
+                break;
+            }
         }
     }
 }
