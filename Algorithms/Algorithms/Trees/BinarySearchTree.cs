@@ -33,7 +33,7 @@ namespace Algorithms.Trees
             if (key == null)
                 return false;
 
-            return Get(key) != null;
+            return !Equals(Get(key), default(TValue));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Algorithms.Trees
         /// </returns>
         public TValue Get(TKey key)
         {
-            return Get(root, key);
+            return key == null ? default : Get(root, key);
         }
 
         /// <summary>
@@ -66,6 +66,9 @@ namespace Algorithms.Trees
         /// <param name="value"> the value</param>
         public void Insert(TKey key, TValue value)
         {
+            if (key == null)
+                return;
+
             root = Insert(root, key, value);
         }
 
@@ -120,7 +123,8 @@ namespace Algorithms.Trees
             if (rank < 0 || rank > Size())
                 return default;
 
-            return Select(root, rank).Key;
+            var result = Select(root, rank);
+            return result != null ? result.Key : default;
         }
 
         /// <summary>
@@ -130,6 +134,9 @@ namespace Algorithms.Trees
         /// <returns>the number of keys in the symbol table strictly less than <paramref name="key"/></returns>
         public int Rank(TKey key)
         {
+            if (key == null)
+                return -1;
+
             return Rank(key, root);
         }
 
@@ -244,83 +251,125 @@ namespace Algorithms.Trees
             }
         }
 
-        private static Node Floor(Node node, TKey key)
+        private static Node Floor(Node root, TKey key)
         {
-            while (true)
-            {
-                if (node == null) return null;
+            Node node = root;
+            Node smallestNodeVisit = null;
 
+            while (node != null)
+            {
                 var cmp = key.CompareTo(node.Key);
-                if (cmp == 0) return node;
 
                 if (cmp < 0)
                 {
                     node = node.Left;
-                    continue;
+                    smallestNodeVisit = CompareGreater(node, smallestNodeVisit);
                 }
-
-                var t = Floor(node.Right, key);
-
-                return t ?? node;
+                else if (cmp > 0)
+                {
+                    smallestNodeVisit = CompareGreater(node, smallestNodeVisit);
+                    node = node.Right;
+                }
+                else
+                    return node;
             }
+
+            return smallestNodeVisit;
         }
 
-        private static Node Ceiling(Node node, TKey key)
+        private static Node CompareGreater(Node one, Node two)
         {
-            if (node == null)
-                return null;
+            if (one == null)
+                return two;
 
-            var cmp = key.CompareTo(node.Key);
-            if (cmp == 0)
-                return node;
+            if (two == null)
+                return one;
 
-            if (cmp > 0)
-                return Floor(node.Right, key);
+            var cmp = one.Key.CompareTo(two.Key);
+            return cmp > 0 ? one : two;
+        }
 
-            var t = Floor(node.Left, key);
+        private static Node Ceiling(Node root, TKey key)
+        {
+            Node node = root;
+            Node largestNodeVisit = null;
 
-            return t ?? node;
+            while (node != null)
+            {
+                var cmp = key.CompareTo(node.Key);
+
+                if (cmp < 0)
+                {
+                    largestNodeVisit = CompareSmaller(node, largestNodeVisit);
+                    node = node.Left;
+                }
+                else if (cmp > 0)
+                {
+                    node = node.Right;
+                    largestNodeVisit = CompareSmaller(node, largestNodeVisit);
+                }
+                else
+                    return node;
+            }
+
+            return largestNodeVisit;
+        }
+
+        private static Node CompareSmaller(Node one, Node two)
+        {
+            if (one == null)
+                return two;
+
+            if (two == null)
+                return one;
+
+            var cmp = one.Key.CompareTo(two.Key);
+            return cmp < 0 ? one : two;
         }
 
         private static Node Select(Node node, int rank)
         {
             while (true)
             {
-                if (node == null) return null;
+                if (node == null)
+                    return null;
 
-                var t = Size(node.Left);
+                var leftSubTreeSize = Size(node.Left);
 
-                if (t > rank)
+                if (leftSubTreeSize > rank)
                 {
                     node = node.Left;
                 }
-                else if (t < rank)
+                else if (leftSubTreeSize < rank)
                 {
                     node = node.Right;
-                    rank = rank - t - 1;
+                    rank = rank - leftSubTreeSize - 1;
                 }
                 else
                     return node;
             }
         }
 
-        private static int Rank(TKey key, Node node)
+        private static int Rank(TKey key, Node root)
         {
-            while (true)
+            int rank = 0;
+            var node = root;
+
+            while (node != null)
             {
-                if (node == null) return 0;
-
                 var cmp = key.CompareTo(node.Key);
-
                 if (cmp < 0)
-                {
                     node = node.Left;
-                }
                 else if (cmp > 0)
-                    return 1 + Rank(key, node.Right);
+                {
+                    rank += 1 + Size(node.Left);
+                    node = node.Right;
+                }
                 else
-                    return Size(node.Left);
+                    return rank + Size(node.Left);
             }
+
+            return -1;
         }
 
         private static Node RemoveMin(Node node)
@@ -376,12 +425,14 @@ namespace Algorithms.Trees
             {
                 if (node == null) return;
 
-                var compareLow = low.CompareTo(node.Key);
-                var compareHigh = high.CompareTo(node.Key);
+                var cmpLow = low.CompareTo(node.Key);
+                var cmpHigh = high.CompareTo(node.Key);
 
-                if (compareLow < 0) Keys(node.Left, queue, low, high);
-                if (compareLow <= 0 && compareHigh >= 0) queue.Enqueue(node.Key);
-                if (compareHigh > 0)
+                if (cmpLow < 0)
+                    Keys(node.Left, queue, low, high);
+                if (cmpLow <= 0 && cmpHigh >= 0)
+                    queue.Enqueue(node.Key);
+                if (cmpHigh > 0)
                 {
                     node = node.Right;
                     continue;
