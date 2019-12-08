@@ -3,6 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <version>1.0.1</version>
+    <Authors>PizzaServices</Authors>
+    <PackageDescription>
+      This library contains some basic algorithms and was created by the author for learning purposes. A detailed description can be found at https://github.com/PizzaServices/Algorithms
+    </PackageDescription>
+    <RepositoryUrl>
+      https://github.com/PizzaServices/Algorithms
+    </RepositoryUrl>
   </PropertyGroup>
 
 </Project>
