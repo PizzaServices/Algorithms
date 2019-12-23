@@ -3,23 +3,21 @@ using System.Collections.Generic;
 
 namespace Algorithms.DataStructures
 {
-    public class Bag<Item> : IEnumerable<Item>
+    public class Bag<TItem> : IEnumerable<TItem>
     {
         private Node first;
         private int count;
 
         private class Node
         {
-            public Item Item { get; set; }
+            public TItem Item { get; set; }
             public Node Next { get; set; }
         }
 
-        public void Add(Item item)
+        public void Add(TItem item)
         {
-            var oldfirst = first;
-            first = new Node();
-            first.Item = item;
-            first.Next = oldfirst;
+            var oldFirst = first;
+            first = new Node {Item = item, Next = oldFirst};
             count++;
         }
 
@@ -33,7 +31,7 @@ namespace Algorithms.DataStructures
             return count;
         }
 
-        public IEnumerator<Item> GetEnumerator()
+        public IEnumerator<TItem> GetEnumerator()
         {
             var current = first;
             while(current != null)

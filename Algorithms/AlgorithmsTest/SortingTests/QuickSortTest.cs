@@ -62,25 +62,17 @@ namespace AlgorithmsTest.SortingTests
         [TestCase(10000)]
         public void TestRandomNumbersThreeWaySort(int count)
         {
-            TimeSpan fileReading;
-            TimeSpan sorting;
-            Stopwatch watch = new Stopwatch();
+            var watch = new Stopwatch();
 
-            watch.Start();
             var testDataGenerator = new SortingTestDataGenerator();
             IList<int> list = testDataGenerator.CreateRandomNumbers(count).ToList();
-            watch.Stop();
-
-            fileReading = watch.Elapsed;
-            watch.Reset();
 
             watch.Start();
             list.ThreeWaySort();
             watch.Stop();
 
-            sorting = watch.Elapsed;
+            var sorting = watch.Elapsed;
 
-            Console.WriteLine("Time for reading the file: {0}", fileReading);
             Console.WriteLine("Time for sorting: {0}", sorting);
 
             Assert.That(testDataGenerator.SortedList, Is.EquivalentTo(list));
