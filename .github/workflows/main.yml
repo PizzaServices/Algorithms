@@ -1,4 +1,4 @@
-name: NuGet Generation
+name: NuGet Generation By Action
 
 on:
   push:
