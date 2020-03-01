@@ -3,11 +3,11 @@ using Algorithms.DataStructures;
 
 namespace Algorithms.Graphs.EdgeWeighted
 {
-    public class KruskalMST
+    public class KruskalMst
     {
-        private Queue<Edge> mst;
+        private readonly Queue<Edge> mst;
 
-        public KruskalMST(EdgeWeightedGraph graph)
+        public KruskalMst(EdgeWeightedGraph graph)
         {
             mst = new Queue<Edge>();
 
@@ -15,9 +15,9 @@ namespace Algorithms.Graphs.EdgeWeighted
             foreach (var edge in graph.GetEdges())
                 prioryQueue.Insert(edge);
 
-            var ds = new DisjointSet(graph.Vertecies);
+            var ds = new DisjointSet(graph.Vertices);
 
-            while (!prioryQueue.IsEmpty() && mst.Count < graph.Vertecies - 1)
+            while (!prioryQueue.IsEmpty() && mst.Count < graph.Vertices - 1)
             {
                 var edge = prioryQueue.DelMin();
                 int vertex = edge.Either();

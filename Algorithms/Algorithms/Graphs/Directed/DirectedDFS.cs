@@ -2,17 +2,17 @@
 
 namespace Algorithms.Graphs.Directed
 {
-    public class DirectedDFS
+    public class DirectedDfs
     {
-        private bool[] marked;
+        private readonly bool[] marked;
 
-        public DirectedDFS(Digraph digraph, int startVertex)
+        public DirectedDfs(Digraph digraph, int startVertex)
         {
             marked = new bool[digraph.Vertices];
             DepthFirstSearch(digraph, startVertex);
         }
 
-        public DirectedDFS(Digraph digraph, IEnumerable<int> sources)
+        public DirectedDfs(Digraph digraph, IEnumerable<int> sources)
         {
             marked = new bool[digraph.Vertices];
             foreach(var s in sources)
@@ -27,15 +27,13 @@ namespace Algorithms.Graphs.Directed
             return marked[vertex];
         }
 
-
-
         private void DepthFirstSearch(Digraph digraph, int vertex)
         {
             marked[vertex] = true;
-            foreach(var w in digraph.Adjacency(vertex))
+            foreach(var headVertex in digraph.Adjacency(vertex))
             {
-                if (!marked[w])
-                    DepthFirstSearch(digraph, w);
+                if (!marked[headVertex])
+                    DepthFirstSearch(digraph, headVertex);
             }
         }
     }

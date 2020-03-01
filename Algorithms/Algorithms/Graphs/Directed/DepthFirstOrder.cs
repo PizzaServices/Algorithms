@@ -5,11 +5,11 @@ namespace Algorithms.Graphs.Directed
 {
     public class DepthFirstOrder
     {
-        private bool[] marked;         
-        private int[] pre;                
-        private int[] post;                
-        private Queue<int> preorder;   
-        private Queue<int> postorder;  
+        private readonly bool[] marked;         
+        private readonly int[] pre;                
+        private readonly int[] post;                
+        private readonly Queue<int> preOrder;   
+        private readonly Queue<int> postOrder;  
         private int preCounter;            
         private int postCounter;           
 
@@ -17,8 +17,8 @@ namespace Algorithms.Graphs.Directed
         {
             pre = new int[graph.Vertices];
             post = new int[graph.Vertices];
-            postorder = new Queue<int>();
-            preorder = new Queue<int>();
+            postOrder = new Queue<int>();
+            preOrder = new Queue<int>();
             marked = new bool[graph.Vertices];
             for (int v = 0; v < graph.Vertices; v++)
                 if (!marked[v]) Dfs(graph, v);
@@ -28,8 +28,8 @@ namespace Algorithms.Graphs.Directed
         {
             pre = new int[graph.Vertices];
             post = new int[graph.Vertices];
-            postorder = new Queue<int>();
-            preorder = new Queue<int>();
+            postOrder = new Queue<int>();
+            preOrder = new Queue<int>();
             marked = new bool[graph.Vertices];
             for (int v = 0; v < graph.Vertices; v++)
                 if (!marked[v]) Dfs(graph, v);
@@ -39,7 +39,7 @@ namespace Algorithms.Graphs.Directed
         {
             marked[vertex] = true;
             pre[vertex] = preCounter++;
-            preorder.Enqueue(vertex);
+            preOrder.Enqueue(vertex);
             foreach (var w in graph.Adjacency(vertex))
             {
                 if (!marked[w])
@@ -47,7 +47,7 @@ namespace Algorithms.Graphs.Directed
                     Dfs(graph, w);
                 }
             }
-            postorder.Enqueue(vertex);
+            postOrder.Enqueue(vertex);
             post[vertex] = postCounter++;
         }
 
@@ -55,7 +55,7 @@ namespace Algorithms.Graphs.Directed
         {
             marked[vertex] = true;
             pre[vertex] = preCounter++;
-            preorder.Enqueue(vertex);
+            preOrder.Enqueue(vertex);
             foreach (var edge in graph.Adj(vertex))
             {
                 int w = edge.DestinationVertex;
@@ -64,7 +64,7 @@ namespace Algorithms.Graphs.Directed
                     Dfs(graph, w);
                 }
             }
-            postorder.Enqueue(vertex);
+            postOrder.Enqueue(vertex);
             post[vertex] = postCounter++;
         }
 
@@ -81,18 +81,18 @@ namespace Algorithms.Graphs.Directed
 
         public IEnumerable<int> Post()
         {
-            return postorder;
+            return postOrder;
         }
 
         public IEnumerable<int> Pre()
         {
-            return preorder;
+            return preOrder;
         }
 
         public IEnumerable<int> ReversePost()
         {
-            Stack<int> reverse = new Stack<int>();
-            foreach (int v in postorder)
+            var reverse = new Stack<int>();
+            foreach (int v in postOrder)
                 reverse.Push(v);
             return reverse;
         }

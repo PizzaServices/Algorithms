@@ -4,8 +4,8 @@ namespace Algorithms.Graphs.Undirected
 {
     public class DepthFirstPaths
     {
-        private bool[] marked;
-        private int[] edgeTo;
+        private readonly bool[] marked;
+        private readonly int[] edgeTo;
 
         private readonly int startVertex;
 
@@ -21,14 +21,15 @@ namespace Algorithms.Graphs.Undirected
             return marked[vertex];
         }
 
-        public IEnumerable<int> pathTo(int vertex)
+        public IEnumerable<int> PathTo(int vertex)
         {
             if (!HasPathTo(vertex))
                 return null;
 
-            Stack<int> path = new Stack<int>();
-            for (int i = vertex; i != startVertex; i = edgeTo[i])
-                path.Push(i);
+            var path = new Stack<int>();
+
+            for (int index = vertex; index != startVertex; index = edgeTo[index])
+                path.Push(index);
 
             path.Push(startVertex);
             return path;
@@ -39,11 +40,11 @@ namespace Algorithms.Graphs.Undirected
             marked[vertex] = true;
             foreach(var w in graph.Adjacency(vertex))
             {
-                if(!marked[w])
-                {
-                    edgeTo[w] = vertex;
-                    DepthFirstSearch(graph, w);
-                }
+                if (marked[w]) 
+                    continue;
+
+                edgeTo[w] = vertex;
+                DepthFirstSearch(graph, w);
             }
         }
     }

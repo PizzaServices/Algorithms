@@ -18,43 +18,44 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
             onStack = new bool[graph.Vertices];
             edgeTo = new DirectedEdge[graph.Vertices];
             marked = new bool[graph.Vertices];
-            for (int i = 0; i < graph.Vertices; ++i)
+            for (int index = 0; index < graph.Vertices; ++index)
             {
-                if (!marked[i] && !HasCycle())
-                    Dfs(i);
+                if (!marked[index] && !HasCycle())
+                    Dfs(index);
             }
         }
-        private void Dfs(int v)
+        private void Dfs(int vertex)
         {
-            marked[v] = true;
-            onStack[v] = true;
-            foreach (var e in graph.Adj(v))
+            marked[vertex] = true;
+            onStack[vertex] = true;
+            foreach (var e in graph.Adj(vertex))
             {
                 if (hasCycle)
                     break;
-                int w = e.DestinationVertex;
-                if (onStack[w])
+
+                int destinationVertex = e.DestinationVertex;
+                if (onStack[destinationVertex])
                 {
                     hasCycle = true;
                     cycle = new Stack<DirectedEdge>();
-                    int p = v;
+                    int tmpVertex = vertex;
                     cycle.Push(e);
-                    while (p != w)
+                    while (tmpVertex != destinationVertex)
                     {
-                        cycle.Push(edgeTo[p]);
-                        p = edgeTo[p].StartVertex;
+                        cycle.Push(edgeTo[tmpVertex]);
+                        tmpVertex = edgeTo[tmpVertex].StartVertex;
                     }
                 }
                 else
                 {
-                    if (!marked[w])
-                    {
-                        edgeTo[w] = e;
-                        Dfs(w);
-                    }
+                    if (marked[destinationVertex]) 
+                        continue;
+
+                    edgeTo[destinationVertex] = e;
+                    Dfs(destinationVertex);
                 }
             }
-            onStack[v] = false;
+            onStack[vertex] = false;
         }
         public bool HasCycle()
         {

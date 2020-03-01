@@ -173,8 +173,8 @@ namespace Algorithms.DataStructures
         {
             if (comparer == null)
                 return ((IComparable) queue[i]).CompareTo(queue[j]) > 0;
-            else
-                return comparer.Compare(queue[i], queue[j]) > 0;
+
+            return comparer.Compare(queue[i], queue[j]) > 0;
         }
 
         private void Exchange(int i, int j)
@@ -182,19 +182,6 @@ namespace Algorithms.DataStructures
             var swap = queue[i];
             queue[i] = queue[j];
             queue[j] = swap;
-        }
-
-        private bool IsMinHeap(int k = 1)
-        {
-            if (k > count)
-                return true;
-            int left = 2 * k;
-            int right = 2 * k + 1;
-            if (left <= count && Greater(k, left))
-                return false;
-            if (right <= count && Greater(k, right))
-                return false;
-            return IsMinHeap(left) && IsMinHeap(right);
         }
 
         /// <summary>

@@ -6,38 +6,38 @@ namespace Algorithms.Graphs.Directed
 {
     public class Digraph
     {
-        public int Vertices { get; private set; }
+        public int Vertices { get; }
         public int Edges { get; private set; }
 
-        private Bag<int>[] adj;
+        private readonly Bag<int>[] adjacencyList;
 
         public Digraph(int numberOfVertices)
         {
             Vertices = numberOfVertices;
             Edges = 0;
-            adj = new Bag<int>[numberOfVertices];
+            adjacencyList = new Bag<int>[numberOfVertices];
             for (int i = 0; i < numberOfVertices; i++)
-                adj[i] = new Bag<int>();
+                adjacencyList[i] = new Bag<int>();
         }
 
-        public void AddEdge(int v, int w)
+        public void AddEdge(int tailVertex, int headVertex)
         {
-            adj[v].Add(w);
+            adjacencyList[tailVertex].Add(headVertex);
             Edges++;
         }
 
         public IEnumerable<int> Adjacency(int vertex)
         {
-            return adj[vertex];
+            return adjacencyList[vertex];
         }
 
         public Digraph Reverse()
         {
             var reverse = new Digraph(Vertices);
-            for(int v = 0; v < Vertices; v++)
+            for(int tailVertex = 0; tailVertex < Vertices; tailVertex++)
             {
-                foreach (var w in adj[v])
-                    reverse.AddEdge(w, v);
+                foreach (var headVertex in adjacencyList[tailVertex])
+                    reverse.AddEdge(headVertex, tailVertex);
             }
 
             return reverse;
@@ -50,7 +50,7 @@ namespace Algorithms.Graphs.Directed
             for (int v = 0; v < Vertices; v++)
             {
                 s.Append(v + ": ");
-                foreach (var w in adj[v])
+                foreach (var w in adjacencyList[v])
                 {
                     s.Append(w + " ");
                 }

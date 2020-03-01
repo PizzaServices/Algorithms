@@ -4,10 +4,10 @@ namespace Algorithms.Graphs.Directed
 {
     public class DirectedCycle
     {
-        private bool[] marked;
-        private int[] edgeTo;
+        private readonly bool[] marked;
+        private readonly int[] edgeTo;
         private Stack<int> cycle;
-        private bool[] onStack;
+        private readonly bool[] onStack;
 
         public DirectedCycle(Digraph digraph)
         {
@@ -37,22 +37,22 @@ namespace Algorithms.Graphs.Directed
             onStack[vertex] = true;
             marked[vertex] = true;
 
-            foreach (var w in digraph.Adjacency(vertex))
+            foreach (var headVertex in digraph.Adjacency(vertex))
             {
                 if (HasCycle())
                     return;
-                else if (!marked[w])
+                else if (!marked[headVertex])
                 {
-                    edgeTo[w] = vertex;
-                    Dfs(digraph, w);
+                    edgeTo[headVertex] = vertex;
+                    Dfs(digraph, headVertex);
                 }
-                else if(onStack[w])
+                else if(onStack[headVertex])
                 {
                     cycle = new Stack<int>();
-                    for (int x = vertex; x != w; x = edgeTo[x])
+                    for (int x = vertex; x != headVertex; x = edgeTo[x])
                         cycle.Push(x);
 
-                    cycle.Push(w);
+                    cycle.Push(headVertex);
                     cycle.Push(vertex);
                 }
             }

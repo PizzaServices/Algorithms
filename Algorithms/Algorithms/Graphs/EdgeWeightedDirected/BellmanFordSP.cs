@@ -3,31 +3,31 @@ using System.Linq;
 
 namespace Algorithms.Graphs.EdgeWeightedDirected
 {
-    public class BellmanFordSP : ShortestPath
+    public class BellmanFordSp : ShortestPath
     {
-        private bool[] onQ;
-        private Queue<int> queue;
+        private readonly bool[] onQueue;
+        private readonly Queue<int> queue;
         private int cost;
         private IEnumerable<DirectedEdge> cycle;
 
-        public BellmanFordSP(EdgeWeightedDigraph graph, int startVertex)
+        public BellmanFordSp(EdgeWeightedDigraph graph, int startVertex)
         {
-            distTo = new double[graph.Vertices];
-            edgeTo = new DirectedEdge[graph.Vertices];
-            onQ = new bool[graph.Vertices];
+            DistTo = new double[graph.Vertices];
+            EdgeTo = new DirectedEdge[graph.Vertices];
+            onQueue = new bool[graph.Vertices];
             queue = new Queue<int>();
 
             for (int v = 0; v < graph.Vertices; v++)
-                distTo[v] = double.MaxValue;
+                DistTo[v] = double.MaxValue;
 
-            distTo[startVertex] = 0.0f;
+            DistTo[startVertex] = 0.0f;
             queue.Enqueue(startVertex);
-            onQ[startVertex] = true;
+            onQueue[startVertex] = true;
 
             while (!queue.Any() && HasNegativeCycle())
             {
                 int v = queue.Dequeue();
-                onQ[v] = false;
+                onQueue[v] = false;
                 Relax(graph, v);
             }
         }
@@ -37,7 +37,7 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
             return cycle != null;
         }
 
-        public IEnumerable<DirectedEdge> NegativCycle()
+        public IEnumerable<DirectedEdge> NegativeCycle()
         {
             return cycle;
         }
@@ -47,15 +47,15 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
             foreach (var edge in graph.Adj(vertex))
             {
                 int w = edge.DestinationVertex;
-                if (distTo[w] > distTo[vertex] + edge.Weight)
+                if (DistTo[w] > DistTo[vertex] + edge.Weight)
                 {
-                    distTo[w] = distTo[vertex] + edge.Weight;
-                    edgeTo[w] = edge;
+                    DistTo[w] = DistTo[vertex] + edge.Weight;
+                    EdgeTo[w] = edge;
 
-                    if (!onQ[w])
+                    if (!onQueue[w])
                     {
                         queue.Enqueue(w);
-                        onQ[w] = true;
+                        onQueue[w] = true;
                     }
                 }
                 if(cost++ % graph.Vertices == 0)
@@ -65,12 +65,12 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
 
         private void FindNegativeCycle()
         {
-            int vertex = edgeTo.Length;
+            int vertex = EdgeTo.Length;
             var spt = new EdgeWeightedDigraph(vertex);
 
             for(int v = 0; v < vertex; v++)
-                if(edgeTo[v] != null)
-                    spt.AddEdge(edgeTo[v]);
+                if(EdgeTo[v] != null)
+                    spt.AddEdge(EdgeTo[v]);
 
             var cf = new EdgeWeightedCycleFinder(spt);
 

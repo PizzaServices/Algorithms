@@ -8,35 +8,35 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
         public int Vertices { get; }
         public int CountOfEdges { get; private set; }
 
-        private Bag<DirectedEdge>[] adj;
+        private readonly Bag<DirectedEdge>[] adjacencyList;
 
-        public EdgeWeightedDigraph(int vertices)
+        public EdgeWeightedDigraph(int verticesCount)
         {
-            Vertices = vertices;
+            Vertices = verticesCount;
             CountOfEdges = 0;
-            adj = new Bag<DirectedEdge>[vertices];
+            adjacencyList = new Bag<DirectedEdge>[verticesCount];
 
-            for(int i = 0; i < vertices; i++)
-                adj[i] = new Bag<DirectedEdge>();
+            for(int i = 0; i < verticesCount; i++)
+                adjacencyList[i] = new Bag<DirectedEdge>();
         }
 
         public void AddEdge(DirectedEdge edge)
         {
-            adj[edge.StartVertex].Add(edge);
+            adjacencyList[edge.StartVertex].Add(edge);
             CountOfEdges++;
         }
 
         public IEnumerable<DirectedEdge> Adj(int vertex)
         {
-            return adj[vertex];
+            return adjacencyList[vertex];
         }
 
         public IEnumerable<DirectedEdge> Edges()
         {
             var bag = new Bag<DirectedEdge>();
 
-            for (int v = 0; v < Vertices; v++)
-                foreach (var edge in adj[v])
+            for (int vertex = 0; vertex < Vertices; vertex++)
+                foreach (var edge in adjacencyList[vertex])
                     bag.Add(edge);
 
             return bag;

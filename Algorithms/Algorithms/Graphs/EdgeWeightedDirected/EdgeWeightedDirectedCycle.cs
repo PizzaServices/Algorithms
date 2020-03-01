@@ -4,9 +4,9 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
 {
     public class EdgeWeightedDirectedCycle
     {
-        private bool[] marked;             
-        private DirectedEdge[] edgeTo;        
-        private bool[] onStack;            
+        private readonly bool[] marked;             
+        private readonly DirectedEdge[] edgeTo;        
+        private readonly bool[] onStack;            
         public Stack<DirectedEdge> Cycle { get; private set; }    
 
         public EdgeWeightedDirectedCycle(EdgeWeightedDigraph graph)
@@ -60,28 +60,26 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
 
         private bool Check()
         {
-            if (HasCycle())
-            {
-                DirectedEdge first = null, last = null;
-                foreach (var edge in Cycle)
-                {
-                    if (first == null) first = edge;
-                    if (last != null)
-                    {
-                        if (last.DestinationVertex != edge.StartVertex)
-                        {
-                            return false;
-                        }
-                    }
-                    last = edge;
-                }
+            if (!HasCycle()) 
+                return true;
 
-                if (last.DestinationVertex != first.StartVertex)
+            DirectedEdge first = null, last = null;
+            foreach (var edge in Cycle)
+            {
+                if (first == null) 
+                    first = edge;
+
+                if (last != null)
                 {
-                    return false;
+                    if (last.DestinationVertex != edge.StartVertex)
+                    {
+                        return false;
+                    }
                 }
+                last = edge;
             }
-            return true;
+
+            return last != null && last.DestinationVertex == first.StartVertex;
         }
     }
 }

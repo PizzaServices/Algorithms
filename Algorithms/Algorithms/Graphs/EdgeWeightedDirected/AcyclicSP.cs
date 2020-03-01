@@ -2,17 +2,17 @@
 
 namespace Algorithms.Graphs.EdgeWeightedDirected
 {
-    public class AcyclicSP : ShortestPath
+    public class AcyclicSp : ShortestPath
     {
-        public AcyclicSP(EdgeWeightedDigraph graph, int startVertex)
+        public AcyclicSp(EdgeWeightedDigraph graph, int startVertex)
         {
-            edgeTo = new DirectedEdge[graph.Vertices];
-            distTo = new double[graph.Vertices];
+            EdgeTo = new DirectedEdge[graph.Vertices];
+            DistTo = new double[graph.Vertices];
 
             for (int v = 0; v < graph.Vertices; v++)
-                distTo[v] = double.MaxValue;
+                DistTo[v] = double.MaxValue;
 
-            distTo[startVertex] = 0.0f;
+            DistTo[startVertex] = 0.0f;
 
             var topological = new Topological(graph);
 
@@ -26,11 +26,12 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
             foreach (var edge in graph.Adj(vertex))
             {
                 int w = edge.DestinationVertex;
-                if (distTo[w] > distTo[vertex] + edge.Weight)
-                {
-                    distTo[w] = distTo[vertex] + edge.Weight;
-                    edgeTo[w] = edge;
-                }
+
+                if (!(DistTo[w] > DistTo[vertex] + edge.Weight)) 
+                    continue;
+
+                DistTo[w] = DistTo[vertex] + edge.Weight;
+                EdgeTo[w] = edge;
             }
         }
     }

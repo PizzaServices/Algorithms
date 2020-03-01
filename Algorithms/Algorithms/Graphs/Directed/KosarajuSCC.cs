@@ -1,12 +1,12 @@
 ﻿namespace Algorithms.Graphs.Directed
 {
-    public class KosarajuSCC
+    public class KosarajuSharirScc
     {
-        private bool[] marked;
-        private int[] id;
-        private int count;
+        private readonly bool[] marked;
+        private readonly int[] id;
+        private readonly int count;
 
-        public KosarajuSCC(Digraph digraph)
+        public KosarajuSharirScc(Digraph digraph)
         {
             marked = new bool[digraph.Vertices];
             id = new int[digraph.Vertices];
@@ -14,17 +14,17 @@
             var order = new DepthFirstOrder(digraph.Reverse());
             foreach(var s in order.ReversePost())
             {
-                if(!marked[s])
-                {
-                    Dfs(digraph, s);
-                    count++;
-                }
+                if (marked[s]) 
+                    continue;
+
+                Dfs(digraph, s);
+                count++;
             }
         }
 
-        public bool StronglyConnected(int v, int w)
+        public bool StronglyConnected(int tailVertex, int headVertex)
         {
-            return id[v] == id[w];
+            return id[tailVertex] == id[headVertex];
         }
 
         public int Id(int vertex)

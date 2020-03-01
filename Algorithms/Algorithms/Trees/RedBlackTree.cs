@@ -5,8 +5,8 @@ namespace Algorithms.Trees
 {
     public class RedBlackTree<TKey, TValue> where TKey : IComparable<TKey>
     {
-        private static readonly bool RED = true;
-        private static readonly bool BLACK = false;
+        private const bool RED = true;
+        private const bool BLACK = false;
 
         private Node root;
 
@@ -16,14 +16,14 @@ namespace Algorithms.Trees
             public TValue Value { get; set; }
             public Node Left { get; set; }
             public Node Right { get; set; }
-            public int N { get; set; }
+            public int SubTreeSize { get; set; }
             public bool Color { get; set; }
 
-            public Node(TKey key, TValue value, int n, bool color)
+            public Node(TKey key, TValue value, int subTreeSize, bool color)
             {
                 Key = key;
                 Value = value;
-                N = n;
+                SubTreeSize = subTreeSize;
                 Color = color;
             }
         }
@@ -46,9 +46,7 @@ namespace Algorithms.Trees
 
         public TValue Get(TKey key)
         {
-            if (key == null)
-                throw new ArgumentException("argument to get() is null");
-            return Get(root, key);
+            return key == null ? default : Get(root, key);
         }
 
 
@@ -85,29 +83,33 @@ namespace Algorithms.Trees
         {
             if (key == null)
                 return;
-            if (!Contains(key)) return;
+
+            if (!Contains(key)) 
+                return;
 
             if (!IsRed(root.Left) && !IsRed(root.Right))
                 root.Color = RED;
 
             root = Delete(root, key);
-            if (!IsEmpty()) root.Color = BLACK;
+
+            if (!IsEmpty()) 
+                root.Color = BLACK;
         }
 
-        public int Size(TKey lo, TKey hi)
+        public int Size(TKey low, TKey high)
         {
-            if (lo == null)
+            if (low == null)
                 throw new ArgumentException("first argument to size() is null");
-            if (hi == null)
+            if (high == null)
                 throw new ArgumentException("second argument to size() is null");
 
-            if (lo.CompareTo(hi) > 0)
+            if (low.CompareTo(high) > 0)
                 return 0;
 
-            if (Contains(hi))
-                return Rank(hi) - Rank(lo) + 1;
+            if (Contains(high))
+                return Rank(high) - Rank(low) + 1;
             else
-                return Rank(hi) - Rank(lo);
+                return Rank(high) - Rank(low);
         }
 
         public int Height()
@@ -117,16 +119,12 @@ namespace Algorithms.Trees
 
         public TKey Min()
         {
-            if (IsEmpty())
-                return default;
-            return Min(root).Key;
+            return IsEmpty() ? default : Min(root).Key;
         }
 
         public TKey Max()
         {
-            if (IsEmpty())
-                return default;
-            return Max(root).Key;
+            return IsEmpty() ? default : Max(root).Key;
         }
 
         public TKey Floor(TKey key)
@@ -136,12 +134,9 @@ namespace Algorithms.Trees
             if (IsEmpty())
                 return default;
 
-            Node x = Floor(root, key);
+            var x = Floor(root, key);
 
-            if (x == null)
-                return default;
-            else
-                return x.Key;
+            return x == null ? default : x.Key;
         }
 
         public TKey Ceiling(TKey key)
@@ -152,45 +147,39 @@ namespace Algorithms.Trees
             if (IsEmpty())
                 return default;
 
-            Node x = Ceiling(root, key);
+            var x = Ceiling(root, key);
 
-            if (x == null)
-                return default;
-            else
-                return x.Key;
+            return x == null ? default : x.Key;
         }
 
         public IEnumerable<TKey> Keys()
         {
-            if (IsEmpty())
-                return new Queue<TKey>();
-
-            return Keys(Min(), Max());
+            return IsEmpty() ? new Queue<TKey>() : Keys(Min(), Max());
         }
 
-        public IEnumerable<TKey> Keys(TKey lo, TKey hi)
+        public IEnumerable<TKey> Keys(TKey low, TKey high)
         {
-            if (lo == null)
+            if (low == null)
                 throw new ArgumentException("first argument to keys() is null");
-            if (hi == null)
+            if (high == null)
                 throw new ArgumentException("second argument to keys() is null");
 
-            Queue<TKey> queue = new Queue<TKey>();
+            var queue = new Queue<TKey>();
 
-            if (IsEmpty() || lo.CompareTo(hi) > 0)
+            if (IsEmpty() || low.CompareTo(high) > 0)
                 return queue;
 
-            Keys(root, queue, lo, hi);
+            Keys(root, queue, low, high);
             return queue;
         }
 
-        public TKey Select(int k)
+        public TKey Select(int rank)
         {
-            if (k < 0 || k >= Size())
+            if (rank < 0 || rank >= Size())
             {
-                throw new ArgumentException("argument to select() is invalid: " + k);
+                throw new ArgumentException("argument to select() is invalid: " + rank);
             }
-            Node x = Select(root, k);
+            var x = Select(root, rank);
             return x.Key;
         }
 
@@ -201,344 +190,366 @@ namespace Algorithms.Trees
             return Rank(key, root);
         }
 
-        private Node Delete(Node h, TKey key)
+        private static Node Delete(Node node, TKey key)
         {
 
-            if (key.CompareTo(h.Key) < 0)
+            if (key.CompareTo(node.Key) < 0)
             {
-                if (!IsRed(h.Left) && !IsRed(h.Left.Left))
-                    h = MoveRedLeft(h);
-                h.Left = Delete(h.Left, key);
+                if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+                    node = MoveRedLeft(node);
+                node.Left = Delete(node.Left, key);
             }
             else
             {
-                if (IsRed(h.Left))
-                    h = RotateRight(h);
+                if (IsRed(node.Left))
+                    node = RotateRight(node);
 
-                if (key.CompareTo(h.Key) == 0 && (h.Right == null))
+                if (key.CompareTo(node.Key) == 0 && (node.Right == null))
                     return null;
 
-                if (!IsRed(h.Right) && !IsRed(h.Right.Left))
-                    h = MoveRedRight(h);
+                if (!IsRed(node.Right) && !IsRed(node.Right.Left))
+                    node = MoveRedRight(node);
 
-                if (key.CompareTo(h.Key) == 0)
+                if (key.CompareTo(node.Key) == 0)
                 {
-                    Node x = Min(h.Right);
-                    h.Key = x.Key;
-                    h.Value = x.Value;
-                    h.Right = DeleteMin(h.Right);
+                    Node tmpNode = Min(node.Right);
+                    node.Key = tmpNode.Key;
+                    node.Value = tmpNode.Value;
+                    node.Right = DeleteMin(node.Right);
                 }
                 else
-                    h.Right = Delete(h.Right, key);
+                    node.Right = Delete(node.Right, key);
             }
-            return Balance(h);
+            return Balance(node);
         }
 
-        private Node DeleteMax(Node h)
+        private static Node DeleteMax(Node node)
         {
-            if (IsRed(h.Left))
-                h = RotateRight(h);
+            if (IsRed(node.Left))
+                node = RotateRight(node);
 
-            if (h.Right == null)
+            if (node.Right == null)
                 return null;
 
-            if (!IsRed(h.Right) && !IsRed(h.Right.Left))
-                h = MoveRedRight(h);
+            if (!IsRed(node.Right) && !IsRed(node.Right.Left))
+                node = MoveRedRight(node);
 
-            h.Right = DeleteMax(h.Right);
+            node.Right = DeleteMax(node.Right);
 
-            return Balance(h);
+            return Balance(node);
         }
 
-        private Node DeleteMin(Node h)
+        private static Node DeleteMin(Node node)
         {
-            if (h.Left == null)
+            if (node.Left == null)
                 return null;
 
-            if (!IsRed(h.Left) && !IsRed(h.Left.Left))
-                h = MoveRedLeft(h);
+            if (!IsRed(node.Left) && !IsRed(node.Left.Left))
+                node = MoveRedLeft(node);
 
-            h.Left = DeleteMin(h.Left);
-            return Balance(h);
+            node.Left = DeleteMin(node.Left);
+            return Balance(node);
         }
 
-        private Node MoveRedLeft(Node h)
+        private static Node MoveRedLeft(Node node)
         {
-            FlipColors(h);
-            if (IsRed(h.Right.Left))
-            {
-                h.Right = RotateRight(h.Right);
-                h = RotateLeft(h);
-                FlipColors(h);
-            }
-            return h;
+            FlipColors(node);
+
+            if (!IsRed(node.Right.Left)) 
+                return node;
+
+            node.Right = RotateRight(node.Right);
+            node = RotateLeft(node);
+            FlipColors(node);
+            return node;
         }
 
-        private Node MoveRedRight(Node h)
+        private static Node MoveRedRight(Node node)
         {
 
-            FlipColors(h);
-            if (IsRed(h.Left.Left))
-            {
-                h = RotateRight(h);
-                FlipColors(h);
-            }
-            return h;
+            FlipColors(node);
+
+            if (!IsRed(node.Left.Left)) 
+                return node;
+
+            node = RotateRight(node);
+            FlipColors(node);
+            return node;
         }
 
-        private Node Balance(Node h)
+        private static Node Balance(Node node)
         {
 
-            if (IsRed(h.Right))
-                h = RotateLeft(h);
+            if (IsRed(node.Right))
+                node = RotateLeft(node);
 
-            if (IsRed(h.Left) && IsRed(h.Left.Left))
-                h = RotateRight(h);
+            if (IsRed(node.Left) && IsRed(node.Left.Left))
+                node = RotateRight(node);
 
-            if (IsRed(h.Left) && IsRed(h.Right))
-                FlipColors(h);
+            if (IsRed(node.Left) && IsRed(node.Right))
+                FlipColors(node);
 
-            h.N = Size(h.Left) + Size(h.Right) + 1;
-            return h;
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
         }
 
-        private int Height(Node x)
+        private static int Height(Node node)
         {
-            if (x == null)
+            if (node == null)
                 return -1;
 
-            return 1 + Math.Max(Height(x.Left), Height(x.Right));
+            return 1 + Math.Max(Height(node.Left), Height(node.Right));
         }
 
-        private Node Min(Node x)
+        private static Node Min(Node node)
         {
-            if (x.Left == null)
-                return x;
-            else
-                return Min(x.Left);
+            while (true)
+            {
+                if (node.Left == null) 
+                    return node;
+
+                node = node.Left;
+            }
         }
 
-        private Node Max(Node x)
+        private static Node Max(Node node)
         {
-            if (x.Right == null)
-                return x;
-            else
-                return Max(x.Right);
+            while (true)
+            {
+                if (node.Right == null) return node;
+                node = node.Right;
+            }
         }
 
-        private Node Floor(Node x, TKey key)
+        private static Node Floor(Node node, TKey key)
         {
-            if (x == null)
-                return null;
+            while (true)
+            {
+                if (node == null) return null;
 
-            int cmp = key.CompareTo(x.Key);
+                int cmp = key.CompareTo(node.Key);
 
-            if (cmp == 0)
-                return x;
-            if (cmp < 0)
-                return Floor(x.Left, key);
+                if (cmp == 0) return node;
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                    continue;
+                }
 
-            Node t = Floor(x.Right, key);
-            if (t != null)
-                return t;
-            else
-                return x;
+                var t = Floor(node.Right, key);
+                return t ?? node;
+            }
         }
 
-        private Node Ceiling(Node x, TKey key)
+        private static Node Ceiling(Node node, TKey key)
         {
-            if (x == null)
-                return null;
+            while (true)
+            {
+                if (node == null) return null;
 
-            int cmp = key.CompareTo(x.Key);
-            if (cmp == 0)
-                return x;
-            if (cmp > 0)
-                return Ceiling(x.Right, key);
+                int cmp = key.CompareTo(node.Key);
+                if (cmp == 0) return node;
+                if (cmp > 0)
+                {
+                    node = node.Right;
+                    continue;
+                }
 
-            Node t = Ceiling(x.Left, key);
-            if (t != null)
-                return t;
-            else
-                return x;
+                Node tmpNode = Ceiling(node.Left, key);
+                return tmpNode ?? node;
+            }
         }
 
-        private Node Select(Node x, int k)
+        private static Node Select(Node node, int rank)
         {
-            int t = Size(x.Left);
-            if (t > k)
-                return Select(x.Left, k);
-            else if (t < k)
-                return Select(x.Right, k - t - 1);
-            else
-                return x;
+            while (true)
+            {
+                int size = Size(node.Left);
+                if (size > rank)
+                {
+                    node = node.Left;
+                }
+                else if (size < rank)
+                {
+                    node = node.Right;
+                    rank = rank - size - 1;
+                }
+                else
+                    return node;
+            }
         }
 
-        private int Rank(TKey key, Node x)
+        private static int Rank(TKey key, Node node)
         {
-            if (x == null)
-                return 0;
+            while (true)
+            {
+                if (node == null) return 0;
 
-            int cmp = key.CompareTo(x.Key);
-            if (cmp < 0)
-                return Rank(key, x.Left);
-            else if (cmp > 0)
-                return 1 + Size(x.Left) + Rank(key, x.Right);
-            else
-                return Size(x.Left);
+                var cmp = key.CompareTo(node.Key);
+                if (cmp < 0)
+                {
+                    node = node.Left;
+                }
+                else if (cmp > 0)
+                    return 1 + Size(node.Left) + Rank(key, node.Right);
+                else
+                    return Size(node.Left);
+            }
         }
 
-        private void Keys(Node x, Queue<TKey> queue, TKey lo, TKey hi)
+        private static void Keys(Node x, Queue<TKey> queue, TKey low, TKey high)
         {
-            if (x == null)
-                return;
+            while (true)
+            {
+                if (x == null) return;
 
-            int cmplo = lo.CompareTo(x.Key);
-            int cmphi = hi.CompareTo(x.Key);
+                int cmpLow = low.CompareTo(x.Key);
+                int cmpHigh = high.CompareTo(x.Key);
 
-            if (cmplo < 0)
-                Keys(x.Left, queue, lo, hi);
-            if (cmplo <= 0 && cmphi >= 0)
-                queue.Enqueue(x.Key);
-            if (cmphi > 0)
-                Keys(x.Right, queue, lo, hi);
+                if (cmpLow < 0) Keys(x.Left, queue, low, high);
+                if (cmpLow <= 0 && cmpHigh >= 0) queue.Enqueue(x.Key);
+                if (cmpHigh > 0)
+                {
+                    x = x.Right;
+                    continue;
+                }
+
+                break;
+            }
         }
 
-        private bool IsBST(Node x, TKey min, TKey max)
+        private bool IsBst(Node node, TKey min, TKey max)
         {
-            if (x == null)
+            if (node == null)
                 return true;
 
-            if (min != null && x.Key.CompareTo(min) <= 0)
+            if (min != null && node.Key.CompareTo(min) <= 0)
                 return false;
 
-            if (max != null && x.Key.CompareTo(max) >= 0)
+            if (max != null && node.Key.CompareTo(max) >= 0)
                 return false;
 
-            return IsBST(x.Left, min, x.Key) && IsBST(x.Right, x.Key, max);
+            return IsBst(node.Left, min, node.Key) && IsBst(node.Right, node.Key, max);
         }
 
-        private bool IsSizeConsistent(Node x)
+        private bool IsSizeConsistent(Node node)
         {
-            if (x == null)
+            if (node == null)
                 return true;
 
-            if (x.N != Size(x.Left) + Size(x.Right) + 1)
+            if (node.SubTreeSize != Size(node.Left) + Size(node.Right) + 1)
                 return false;
 
-            return IsSizeConsistent(x.Left) && IsSizeConsistent(x.Right);
+            return IsSizeConsistent(node.Left) && IsSizeConsistent(node.Right);
         }
 
-        private bool Is23(Node x)
+        private bool Is23(Node node)
         {
-            if (x == null)
+            if (node == null)
                 return true;
 
-            if (IsRed(x.Right))
+            if (IsRed(node.Right))
                 return false;
 
-            if (x != root && IsRed(x) && IsRed(x.Left))
+            if (node != root && IsRed(node) && IsRed(node.Left))
                 return false;
 
-            return Is23(x.Left) && Is23(x.Right);
+            return Is23(node.Left) && Is23(node.Right);
         }
 
 
-        private bool IsBalanced(Node x, int black)
+        private bool IsBalanced(Node node, int black)
         {
-            if (x == null)
+            if (node == null)
                 return black == 0;
 
-            if (!IsRed(x))
+            if (!IsRed(node))
                 black--;
 
-            return IsBalanced(x.Left, black) && IsBalanced(x.Right, black);
+            return IsBalanced(node.Left, black) && IsBalanced(node.Right, black);
         }
 
-        private int Size(Node x)
+        private static int Size(Node node)
         {
-            if (x == null)
-                return 0;
-            else
-                return x.N;
+            return node?.SubTreeSize ?? 0;
         }
 
-        private TValue Get(Node x, TKey key)
+        private static TValue Get(Node node, TKey key)
         {
-            while (x != null)
+            while (node != null)
             {
-                int cmp = key.CompareTo(x.Key);
+                var cmp = key.CompareTo(node.Key);
                 if (cmp < 0)
-                    x = x.Left;
+                    node = node.Left;
                 else if (cmp > 0)
-                    x = x.Right;
+                    node = node.Right;
                 else
-                    return x.Value;
+                    return node.Value;
             }
             return default;
         }
 
-        private Node Put(Node x, TKey key, TValue value)
+        private static Node Put(Node node, TKey key, TValue value)
         {
-            if (x == null)
+            if (node == null)
                 return new Node(key, value, 1, RED);
 
-            int cmp = key.CompareTo(x.Key);
+            var cmp = key.CompareTo(node.Key);
 
             if (cmp < 0)
-                x.Left = Put(x.Left, key, value);
+                node.Left = Put(node.Left, key, value);
             else if (cmp > 0)
-                x.Right = Put(x.Right, key, value);
+                node.Right = Put(node.Right, key, value);
             else
-                x.Value = value;
+                node.Value = value;
 
-            if (IsRed(x.Right) && !IsRed(x.Left))
-                x = RotateLeft(x);
-            if (IsRed(x.Left) && IsRed(x.Left.Left))
-                x = RotateRight(x);
-            if (IsRed(x.Left) && IsRed(x.Right))
-                FlipColors(x);
+            if (IsRed(node.Right) && !IsRed(node.Left))
+                node = RotateLeft(node);
+            if (IsRed(node.Left) && IsRed(node.Left.Left))
+                node = RotateRight(node);
+            if (IsRed(node.Left) && IsRed(node.Right))
+                FlipColors(node);
 
-            x.N = Size(x.Left) + Size(x.Right) + 1;
-            return x;
+            node.SubTreeSize = Size(node.Left) + Size(node.Right) + 1;
+            return node;
         }
 
-        private bool IsRed(Node x)
+        private static bool IsRed(Node node)
         {
-            if (x == null)
+            if (node == null)
                 return false;
-            return x.Color = RED;
+            return node.Color = RED;
         }
 
-        private Node RotateLeft(Node x)
+        private static Node RotateLeft(Node node)
         {
-            Node t = x.Right;
-            x.Right = t.Left;
-            t.Left = x;
-            t.Color = x.Color;
-            x.Color = RED;
-            t.N = x.N;
-            x.N = 1 + Size(x.Left) + Size(x.Right);
-            return t;
+            Node tmpNode = node.Right;
+            node.Right = tmpNode.Left;
+            tmpNode.Left = node;
+            tmpNode.Color = node.Color;
+            node.Color = RED;
+            tmpNode.SubTreeSize = node.SubTreeSize;
+            node.SubTreeSize = 1 + Size(node.Left) + Size(node.Right);
+            return tmpNode;
         }
 
-        private Node RotateRight(Node x)
+        private static Node RotateRight(Node node)
         {
-            Node t = x.Left;
-            x.Left = t.Right;
-            t.Right = x;
-            t.Color = x.Color;
-            x.Color = RED;
-            t.N = x.N;
-            x.N = 1 + Size(x.Left) + Size(x.Right);
-            return t;
+            Node tmpNode = node.Left;
+            node.Left = tmpNode.Right;
+            tmpNode.Right = node;
+            tmpNode.Color = node.Color;
+            node.Color = RED;
+            tmpNode.SubTreeSize = node.SubTreeSize;
+            node.SubTreeSize = 1 + Size(node.Left) + Size(node.Right);
+            return tmpNode;
         }
 
-        private void FlipColors(Node x)
+        private static void FlipColors(Node node)
         {
-            x.Color = RED;
-            x.Left.Color = BLACK;
-            x.Right.Color = BLACK;
+            node.Color = RED;
+            node.Left.Color = BLACK;
+            node.Right.Color = BLACK;
         }
     }
 }
