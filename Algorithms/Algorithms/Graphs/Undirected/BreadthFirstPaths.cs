@@ -4,8 +4,8 @@ namespace Algorithms.Graphs.Undirected
 {
     public class BreadthFirstPaths
     {
-        private bool[] marked;
-        private int[] edgeTo;
+        private readonly bool[] marked;
+        private readonly int[] edgeTo;
 
         private readonly int startVertex;
 
@@ -27,32 +27,32 @@ namespace Algorithms.Graphs.Undirected
             if (!HasPathTo(vertex))
                 return null;
 
-            Stack<int> path = new Stack<int>();
-            for (int i = vertex; i != startVertex; i = edgeTo[i])
-                path.Push(i);
+            var path = new Stack<int>();
+            for (int index = vertex; index != startVertex; index = edgeTo[index])
+                path.Push(index);
 
             path.Push(startVertex);
             return path;
         }
 
-        private void BreadthFirstSearch(Graph graph, int startVertex)
+        private void BreadthFirstSearch(Graph graph, int vertex)
         {
-            Queue<int> queue = new Queue<int>();
-            marked[startVertex] = true;
-            queue.Enqueue(startVertex);
+            var queue = new Queue<int>();
+            marked[vertex] = true;
+            queue.Enqueue(vertex);
 
             while(queue.Count != 0)
             {
-                int v = queue.Dequeue();
+                int tailVertex = queue.Dequeue();
 
-                foreach(var w in graph.Adjacency(v))
+                foreach(var headVertex in graph.Adjacency(tailVertex))
                 {
-                    if(!marked[w])
-                    {
-                        edgeTo[w] = v;
-                        marked[w] = true;
-                        queue.Enqueue(w);
-                    }
+                    if (marked[headVertex]) 
+                        continue;
+
+                    edgeTo[headVertex] = tailVertex;
+                    marked[headVertex] = true;
+                    queue.Enqueue(headVertex);
                 }
             }
         }

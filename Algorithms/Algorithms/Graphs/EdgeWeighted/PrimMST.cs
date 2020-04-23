@@ -3,23 +3,23 @@ using Algorithms.DataStructures;
 
 namespace Algorithms.Graphs.EdgeWeighted
 {
-    public class PrimMST
+    public class PrimMst
     {
-        private Edge[] edgeTo;
-        private double[] distTo;
-        private bool[] marked;
-        private IndexMinPQ<double> prioryQueue;
+        private readonly Edge[] edgeTo;
+        private readonly double[] distTo;
+        private readonly bool[] marked;
+        private readonly IndexMinPQ<double> prioryQueue;
 
-        public PrimMST(EdgeWeightedGraph graph)
+        public PrimMst(EdgeWeightedGraph graph)
         {
-            edgeTo = new Edge[graph.Vertecies];
-            distTo = new double[graph.Vertecies];
-            marked = new bool[graph.Vertecies];
+            edgeTo = new Edge[graph.Vertices];
+            distTo = new double[graph.Vertices];
+            marked = new bool[graph.Vertices];
 
-            for (int v = 0; v < graph.Vertecies; v++)
-                distTo[v] = double.MaxValue;
+            for (int vertex = 0; vertex < graph.Vertices; vertex++)
+                distTo[vertex] = double.MaxValue;
 
-            prioryQueue = new IndexMinPQ<double>(graph.Vertecies);
+            prioryQueue = new IndexMinPQ<double>(graph.Vertices);
 
             distTo[0] = 0.0f;
             prioryQueue.Insert(0,0.0f);
@@ -30,11 +30,10 @@ namespace Algorithms.Graphs.EdgeWeighted
 
         public IEnumerable<Edge> Edges()
         {
-            Queue<Edge> mst = new Queue<Edge>();
+            var mst = new Queue<Edge>();
 
-            for (int v = 0; v < edgeTo.Length; v++)
+            foreach (var edge in edgeTo)
             {
-                var edge = edgeTo[v];
                 if(edge != null)
                     mst.Enqueue(edge);
             }
@@ -51,16 +50,16 @@ namespace Algorithms.Graphs.EdgeWeighted
                 if(marked[otherVertex])
                     continue;
 
-                if (edge.Weight < distTo[otherVertex])
-                {
-                    edgeTo[otherVertex] = edge;
-                    distTo[otherVertex] = edge.Weight;
+                if (!(edge.Weight < distTo[otherVertex])) 
+                    continue;
 
-                    if(prioryQueue.Contains(otherVertex))
-                        prioryQueue.Change(otherVertex, distTo[otherVertex]);
-                    else
-                        prioryQueue.Insert(otherVertex, distTo[otherVertex]);
-                }
+                edgeTo[otherVertex] = edge;
+                distTo[otherVertex] = edge.Weight;
+
+                if(prioryQueue.Contains(otherVertex))
+                    prioryQueue.ChangeKey(otherVertex, distTo[otherVertex]);
+                else
+                    prioryQueue.Insert(otherVertex, distTo[otherVertex]);
             }
         }
     }

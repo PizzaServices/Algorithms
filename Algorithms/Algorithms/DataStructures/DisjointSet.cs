@@ -2,12 +2,22 @@
 
 namespace Algorithms.DataStructures
 {
+    /// <summary>
+    /// This class represents a disjoint-sets data type
+    /// (also known as union-find data structure).
+    /// It supports the classic union and find operations,
+    /// along with a count operation that returns the total number of sets.
+    /// </summary>
     public class DisjointSet
     {
-        private int[] parent; 
-        private byte[] rank;
+        private readonly int[] parent; 
+        private readonly byte[] rank;
         private int count;
 
+        /// <summary>
+        /// Initializes an empty union-find data structure with n elements 0 through n-1
+        /// </summary>
+        /// <param name="count">the number of elements</param>
         public DisjointSet(int count)
         {
             if (count < 0)
@@ -17,62 +27,85 @@ namespace Algorithms.DataStructures
             parent = new int[count];
             rank = new byte[count];
 
-            for (int i = 0; i < count; i++)
+            for (var index = 0; index < count; index++)
             {
-                parent[i] = i;
-                rank[i] = 0;
+                parent[index] = index;
+                rank[index] = 0;
             }
         }
 
-        public int Find(int p)
+        /// <summary>
+        /// Returns the canonical element of the set containing element <paramref name="element"/>.
+        /// </summary>
+        /// <param name="element">an element</param>
+        /// <returns>the canonical element of the set containing element <paramref name="element"/></returns>
+        public int Find(int element)
         {
-            Validate(p);
-            while (p != parent[p])
+            Validate(element);
+            while (element != parent[element])
             {
-                parent[p] = parent[parent[p]];
-                p = parent[p];
+                parent[element] = parent[parent[element]];
+                element = parent[element];
             }
 
-            return p;
+            return element;
         }
 
+        /// <summary>
+        /// Returns the number of sets.
+        /// </summary>
+        /// <returns>the number of sets (between 1 and n)</returns>
         public int Count()
         {
             return count;
         }
 
-        public bool Connected(int p, int q)
+        /// <summary>
+        /// Returns <see langword="true" /> if the two elements are in the same set.
+        /// </summary>
+        /// <param name="firstElement">one element</param>
+        /// <param name="secondElement">the other element</param>
+        /// <returns>
+        ///     <see langword="true" /> if <paramref name="firstElement"/> and <paramref name="secondElement"/> are in the same set; <see langword="false" /> otherwise
+        /// </returns>
+        public bool Connected(int firstElement, int secondElement)
         {
-            return Find(p) == Find(q);
+            return Find(firstElement) == Find(secondElement);
         }
 
-        public void Union(int p, int q)
+        /// <summary>
+        /// Merges the set containing element <paramref name="firstElement"/> with the
+        /// the set containing element <paramref name="secondElement"/>.
+        /// </summary>
+        /// <param name="firstElement">one element</param>
+        /// <param name="secondElement">the other element</param>
+        public void Union(int firstElement, int secondElement)
         {
-            int rootP = Find(p);
-            int rootQ = Find(q);
+            int rootOne = Find(firstElement);
+            int rootTwo = Find(secondElement);
 
-            if (rootP == rootQ)
+            if (rootOne == rootTwo)
                 return;
 
-            if (rank[rootP] < rank[rootQ])
-                parent[rootP] = rootQ;
-            else if (rank[rootP] > rank[rootQ])
-                parent[rootQ] = rootP;
+            if (rank[rootOne] < rank[rootTwo])
+                parent[rootOne] = rootTwo;
+            else if (rank[rootOne] > rank[rootTwo])
+                parent[rootTwo] = rootOne;
             else
             {
-                parent[rootQ] = rootP;
-                rank[rootP]++;
+                parent[rootTwo] = rootOne;
+                rank[rootOne]++;
             }
 
             count--;
         }
 
-        private void Validate(int p)
+        private void Validate(int index)
         {
-            int n = parent.Length;
-            if (p < 0 || p >= n)
+            int length = parent.Length;
+            if (index < 0 || index >= length)
             {
-                throw new ArgumentException("index " + p + " is not between 0 and " + (n - 1));
+                throw new ArgumentException("index " + index + " is not between 0 and " + (length - 1));
             }
         }
     }

@@ -4,43 +4,42 @@ namespace Algorithms.Graphs.EdgeWeighted
 {
     public class Edge : IComparable<Edge>
     {
-        public int VertexOne { get; private set; }
-        public int VertexTwo { get; private set; }
-        public double Weight { get; private set; }
+        public int TrailVertex { get; }
+        public int HeadVertex { get; }
+        public double Weight { get; }
 
-        public Edge(int v, int w, double weight)
+        public Edge(int trailVertex, int headVertex, double weight)
         {
-            VertexOne = v;
-            VertexTwo = w;
+            TrailVertex = trailVertex;
+            HeadVertex = headVertex;
             Weight = weight;
         }
 
         public int Either()
         {
-            return VertexOne;
+            return TrailVertex;
         }
 
         public int Other(int vertex)
         {
-            if (vertex == VertexOne)
-                return VertexTwo;
-            if (vertex == VertexTwo)
-                return VertexOne;
+            if (vertex == TrailVertex)
+                return HeadVertex;
+            if (vertex == HeadVertex)
+                return TrailVertex;
             throw new ArgumentException("Inconsistent edge");
         }
 
         public override string ToString()
         {
-            return $"{VertexOne}-{VertexTwo} {Weight:F2}";
+            return $"{TrailVertex}-{HeadVertex} {Weight:F2}";
         }
 
         public int CompareTo(Edge that)
         {
             if (Weight < that.Weight)
                 return -1;
-            if (Weight > that.Weight)
-                return 1;
-            return 0;
+
+            return Weight > that.Weight ? 1 : 0;
         }
     }
 }

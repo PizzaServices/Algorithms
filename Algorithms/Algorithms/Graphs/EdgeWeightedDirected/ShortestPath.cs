@@ -4,17 +4,17 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
 {
     public abstract class ShortestPath
     {
-        protected DirectedEdge[] edgeTo;
-        protected double[] distTo;
+        protected DirectedEdge[] EdgeTo;
+        protected double[] DistTo;
 
-        public double DistTo(int vertex)
+        public double GetDistanceTo(int vertex)
         {
-            return distTo[vertex];
+            return DistTo[vertex];
         }
 
         public bool HasPathTo(int vertex)
         {
-            return distTo[vertex] < double.MaxValue;
+            return DistTo[vertex] < double.MaxValue;
         }
 
         public IEnumerable<DirectedEdge> PathTo(int vertex)
@@ -23,7 +23,7 @@ namespace Algorithms.Graphs.EdgeWeightedDirected
                 return null;
 
             var path = new Stack<DirectedEdge>();
-            for(var edge = edgeTo[vertex]; edge != null; edge = edgeTo[edge.StartVertex])
+            for(var edge = EdgeTo[vertex]; edge != null; edge = EdgeTo[edge.StartVertex])
                 path.Push(edge);
 
             return path;

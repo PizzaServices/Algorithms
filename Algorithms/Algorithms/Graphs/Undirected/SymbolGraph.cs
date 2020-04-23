@@ -4,9 +4,9 @@ namespace Algorithms.Graphs.Undirected
 {
     public class SymbolGraph
     {
-        private Dictionary<string, int> st;
-        private string[] keys;
-        private Graph graph;
+        private readonly Dictionary<string, int> st;
+        private readonly string[] keys;
+        private readonly Graph graph;
 
         public SymbolGraph(IEnumerable<string> strings, string separator)
         {
@@ -14,10 +14,10 @@ namespace Algorithms.Graphs.Undirected
             foreach (var str in strings)
             {
                 var strParts = str.Split(separator);
-                for (int i = 0; i < strParts.Length; i++)
+                foreach (var part in strParts)
                 {
-                    if (!st.ContainsKey(strParts[i]))
-                        st.Add(strParts[i], st.Count);
+                    if (!st.ContainsKey(part))
+                        st.Add(part, st.Count);
                 }
             }
 
@@ -28,6 +28,7 @@ namespace Algorithms.Graphs.Undirected
             }
 
             graph = new Graph(st.Count);
+
             foreach (var str in strings)
             {
                 var strParts = str.Split(separator);
@@ -39,15 +40,15 @@ namespace Algorithms.Graphs.Undirected
             }
         }
 
-        public bool Contains(string s)
+        public bool Contains(string str)
         {
-            return st.ContainsKey(s);
+            return st.ContainsKey(str);
         }
 
-        public int Index(string s)
+        public int Index(string str)
         {
-            if (st.ContainsKey(s))
-                return st[s];
+            if (st.ContainsKey(str))
+                return st[str];
             else
                 return -1;
         }

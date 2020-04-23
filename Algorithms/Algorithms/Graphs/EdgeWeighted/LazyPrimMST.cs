@@ -3,16 +3,16 @@ using Algorithms.DataStructures;
 
 namespace Algorithms.Graphs.EdgeWeighted
 {
-    public class LazyPrimMST
+    public class LazyPrimMst
     {
-        private bool[] marked;
-        private Queue<Edge> mst;
-        private MinPQ<Edge> prioryQueue;
+        private readonly bool[] marked;
+        private readonly Queue<Edge> mst;
+        private readonly MinPQ<Edge> prioryQueue;
 
-        public LazyPrimMST(EdgeWeightedGraph graph)
+        public LazyPrimMst(EdgeWeightedGraph graph)
         {
             prioryQueue = new MinPQ<Edge>();
-            marked = new bool[graph.Vertecies];
+            marked = new bool[graph.Vertices];
             mst = new Queue<Edge>();
 
             Visit(graph, 0);

@@ -4,12 +4,24 @@ namespace Algorithms.Sorting
 {
     public static class QuickSorter
     {
+        /// <summary>
+        /// Sort the List
+        /// </summary>
+        /// <typeparam name="T">the type of the stored values</typeparam>
+        /// <param name="collection">the collection to sort</param>
+        /// <param name="comparer">the comparer for the values, if not specified the default comparer is used</param>
         public static void QuickSort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;
             Sort(collection, 0, collection.Count - 1, comparer);
         }
 
+        /// <summary>
+        /// Sort the List
+        /// </summary>
+        /// <typeparam name="T">the type of the stored values</typeparam>
+        /// <param name="collection">the collection to sort</param>
+        /// <param name="comparer">the comparer for the values, if not specified the default comparer is used</param>
         public static void ThreeWaySort<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;

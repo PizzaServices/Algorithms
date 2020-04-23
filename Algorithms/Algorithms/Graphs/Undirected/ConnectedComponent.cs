@@ -2,28 +2,28 @@
 {
     public class ConnectedComponent
     {
-        private bool[] marked;
-        private int[] id;
-        private int count;
+        private readonly bool[] marked;
+        private readonly int[] id;
+        private readonly int count;
 
         public ConnectedComponent(Graph graph)
         {
             marked = new bool[graph.Vertices];
             id = new int[graph.Vertices];
 
-            for(int i = 0; i < graph.Vertices; i++)
+            for(int index = 0; index < graph.Vertices; index++)
             {
-                if(!marked[i])
-                {
-                    Dfs(graph, i);
-                    count++;
-                }
+                if (marked[index]) 
+                    continue;
+
+                Dfs(graph, index);
+                count++;
             }
         }
 
-        public bool Connected(int v, int w)
+        public bool Connected(int tailVertex, int headVertex)
         {
-            return id[v] == id[w];
+            return id[tailVertex] == id[headVertex];
         }
 
         public int Id(int vertex)
@@ -40,10 +40,10 @@
         {
             marked[vertex] = true;
             id[vertex] = count;
-            foreach(var w in graph.Adjacency(vertex))
+            foreach(var headVertex in graph.Adjacency(vertex))
             {
-                if (!marked[w])
-                    Dfs(graph, w);
+                if (!marked[headVertex])
+                    Dfs(graph, headVertex);
             }
         }
     }

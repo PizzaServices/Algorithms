@@ -1,11 +1,11 @@
 namespace Algorithms.String
 {
-    public static class LSD
+    public static class Lsd
     {
         public static string[] Sort(string[] array, int stringLength)
         {
             int arrayLength = array.Length;
-            int r = 256;
+            const int r = 256;
             string[] aux = new string[arrayLength];
 
             for (int d = stringLength - 1; d >= 0; d--)

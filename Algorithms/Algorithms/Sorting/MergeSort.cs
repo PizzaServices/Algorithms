@@ -6,6 +6,12 @@ namespace Algorithms.Sorting
 {
     public static class MergeSorter
     {
+        /// <summary>
+        /// Sort the List
+        /// </summary>
+        /// <typeparam name="T">the type of the stored values</typeparam>
+        /// <param name="collection">the collection to sort</param>
+        /// <param name="comparer">the comparer for the values, if not specified the default comparer is used</param>
         public static void SortTopDown<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;
@@ -13,6 +19,12 @@ namespace Algorithms.Sorting
             SortTopDown(collection, 0, collection.Count - 1, aux, comparer);
         }
 
+        /// <summary>
+        /// Sort the List
+        /// </summary>
+        /// <typeparam name="T">the type of the stored values</typeparam>
+        /// <param name="collection">the collection to sort</param>
+        /// <param name="comparer">the comparer for the values, if not specified the default comparer is used</param>
         public static void SortBottomUp<T>(this IList<T> collection, IComparer<T> comparer = null)
         {
             comparer ??= Comparer<T>.Default;
@@ -62,7 +74,8 @@ namespace Algorithms.Sorting
         private static bool IsSorted<T>(IList<T> collection, int lo, int hi, IComparer<T> comparer)
         {
             for (int i = lo + 1; i <= hi; i++)
-                if (SortingBase.Less(collection[i], collection[i - 1], comparer)) return false;
+                if (SortingBase.Less(collection[i], collection[i - 1], comparer)) 
+                    return false;
             return true;
         }
     }

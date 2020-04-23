@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Algorithms.DataStructures;
 
@@ -7,57 +8,57 @@ namespace Algorithms.Graphs.Undirected
 {
     public class Graph
     {
-        public int Vertices { get; private set; } 
+        public int Vertices { get; } 
         public int Edges { get; private set; }
 
-        private Bag<int>[] adj;
+        private readonly Bag<int>[] adjacencyList;
 
         public Graph(int numberOfVertices)
         {
             Vertices = numberOfVertices;
             Edges = 0;
-            adj = new Bag<int>[numberOfVertices];
-            for(int i = 0; i < numberOfVertices; i++)
+            adjacencyList = new Bag<int>[numberOfVertices];
+            for(int index = 0; index < numberOfVertices; index++)
             {
-                adj[i] = new Bag<int>();
+                adjacencyList[index] = new Bag<int>();
             }
         }
 
-        public void AddEdge(int v, int w)
+        public void AddEdge(int tailVertex, int headVertex)
         {
-            adj[v].Add(w);
-            adj[w].Add(v);
+            adjacencyList[tailVertex].Add(headVertex);
+            adjacencyList[headVertex].Add(tailVertex);
             Edges++;
         }
 
         public IEnumerable<int> Adjacency(int vertex)
         {
-            return adj[vertex];
+            return adjacencyList[vertex];
         }
 
         public override string ToString()
         {
-            StringBuilder s = new StringBuilder();
-            s.Append(Vertices + " vertices, " + Edges + " edges \n");
-            for (int v = 0; v < Vertices; v++)
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(Vertices + " vertices, " + Edges + " edges \n");
+            for (int tailVertex = 0; tailVertex < Vertices; tailVertex++)
             {
-                s.Append(v + ": ");
-                foreach (var w in adj[v])
+                stringBuilder.Append(tailVertex + ": ");
+                foreach (var headVertex in adjacencyList[tailVertex])
                 {
-                    s.Append(w + " ");
+                    stringBuilder.Append(headVertex + " ");
                 }
-                s.Append("\n");
+                stringBuilder.Append("\n");
             }
-            return s.ToString();
+            return stringBuilder.ToString();
         }
 
         public int Degree(int vertex)
         {
             ValidateVertex(vertex);
-            return adj[vertex].Size();
+            return adjacencyList[vertex].Size();
         }
 
-        public int maxDegree()
+        public int MaxDegree()
         {
             int max = 0;
             for(int i = 0; i < Vertices; i++)
@@ -79,11 +80,7 @@ namespace Algorithms.Graphs.Undirected
             int count = 0;
             for(int i = 0; i < Vertices; i++)
             {
-                foreach(var edge in Adjacency(i))
-                {
-                    if (i == edge)
-                        count++;
-                }
+                count += Adjacency(i).Count(edge => i == edge);
             }
 
             return count / 2;

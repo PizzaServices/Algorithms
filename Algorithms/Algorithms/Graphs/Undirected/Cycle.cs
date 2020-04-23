@@ -2,16 +2,16 @@
 {
     public class Cycle
     {
-        private bool[] marked;
+        private readonly bool[] marked;
         private bool hasCycle;
 
         public Cycle(Graph graph)
         {
             marked = new bool[graph.Vertices];
-            for(int i = 0; i < graph.Vertices; i++)
+            for(int vertex = 0; vertex < graph.Vertices; vertex++)
             {
-                if (!marked[i])
-                    Dfs(graph, i, i);
+                if (!marked[vertex])
+                    Dfs(graph, vertex, vertex);
             }
         }
 
@@ -20,14 +20,14 @@
             return hasCycle;
         }
 
-        private void Dfs(Graph graph, int v, int u)
+        private void Dfs(Graph graph, int tailVertex, int headVertex)
         {
-            marked[v] = true;
-            foreach(var w in graph.Adjacency(v))
+            marked[tailVertex] = true;
+            foreach(var w in graph.Adjacency(tailVertex))
             {
                 if (!marked[w])
-                    Dfs(graph, w, v);
-                else if (w != u)
+                    Dfs(graph, w, tailVertex);
+                else if (w != headVertex)
                     hasCycle = true;
             }
         }

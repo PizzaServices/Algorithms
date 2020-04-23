@@ -10,21 +10,23 @@ namespace Algorithms.Graphs.Directed
         public Topological(Digraph digraph)
         {
             var cycleFinder = new DirectedCycle(digraph);
-            if(!cycleFinder.HasCycle())
-            {
-                var dfs = new DepthFirstOrder(digraph);
-                order = dfs.ReversePost();
-            }
+
+            if (cycleFinder.HasCycle()) 
+                return;
+
+            var dfs = new DepthFirstOrder(digraph);
+            order = dfs.ReversePost();
         }
 
         public Topological(EdgeWeightedDigraph graph)
         {
             var finder = new EdgeWeightedDirectedCycle(graph);
-            if (!finder.HasCycle())
-            {
-                DepthFirstOrder dfs = new DepthFirstOrder(graph);
-                order = dfs.ReversePost();
-            }
+
+            if (finder.HasCycle()) 
+                return;
+
+            DepthFirstOrder dfs = new DepthFirstOrder(graph);
+            order = dfs.ReversePost();
         }
 
         public IEnumerable<int> Order()
@@ -32,7 +34,7 @@ namespace Algorithms.Graphs.Directed
             return order;
         }
 
-        public bool IsAcyclicallyDigraph()
+        public bool HasOrder()
         {
             return order != null;
         }

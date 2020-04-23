@@ -5,42 +5,42 @@ namespace Algorithms.Graphs.EdgeWeighted
 {
     public class EdgeWeightedGraph
     {
-        public int Vertecies { get; private set; }
+        public int Vertices { get; }
         public int Edges { get; private set; }
 
-        private Bag<Edge>[] adj;
+        private readonly Bag<Edge>[] adjacencyList;
 
-        public EdgeWeightedGraph(int v)
+        public EdgeWeightedGraph(int verticesCount)
         {
-            Vertecies = v;
+            Vertices = verticesCount;
             Edges = 0;
-            adj = new Bag<Edge>[v];
-            for (var i = 0; i < v; i++)
+            adjacencyList = new Bag<Edge>[verticesCount];
+            for (var i = 0; i < verticesCount; i++)
             {
-                adj[v] = new Bag<Edge>();
+                adjacencyList[verticesCount] = new Bag<Edge>();
             }
         }
 
-        public void AddEdge(Edge e)
+        public void AddEdge(Edge edge)
         {
-            int v = e.Either();
-            int w = e.Other(v);
+            int v = edge.Either();
+            int w = edge.Other(v);
 
-            adj[v].Add(e);
-            adj[w].Add(e);
+            adjacencyList[v].Add(edge);
+            adjacencyList[w].Add(edge);
             Edges++;
         }
 
-        public IEnumerable<Edge> Adj(int v)
+        public IEnumerable<Edge> Adj(int vertex)
         {
-            return adj[v];
+            return adjacencyList[vertex];
         }
 
         public IEnumerable<Edge> GetEdges()
         {
             var result = new Bag<Edge>();
 
-            foreach (var bag in adj)
+            foreach (var bag in adjacencyList)
             {
                 foreach (var edge in bag)
                 {

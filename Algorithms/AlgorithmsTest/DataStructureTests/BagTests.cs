@@ -17,7 +17,7 @@ namespace AlgorithmsTest.DataStructureTests
             var result = bag.IsEmpty();
 
             // Assert
-            Assert.AreEqual(true, result);
+            Assert.IsTrue(result);
         }
 
         [TestCase]
@@ -31,7 +31,7 @@ namespace AlgorithmsTest.DataStructureTests
             var result = bag.IsEmpty();
 
             // Assert
-            Assert.AreEqual(false, result);
+            Assert.IsFalse(result);
         }
 
         [TestCase(new[] { 1, 2, 3 }, 3)]

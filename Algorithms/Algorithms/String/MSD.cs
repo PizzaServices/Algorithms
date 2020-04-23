@@ -2,12 +2,12 @@ using System;
 
 namespace Algorithms.String
 {
-    public static class MSD
+    public static class Msd
     {
-        private static int r = 256;
+        private const int r = 256;
         private static string[] aux;
 
-        private static readonly int m = 15;
+        private const int m = 15;
 
         public static void Sort(string[] array)
         {
@@ -62,10 +62,10 @@ namespace Algorithms.String
         {
             for (int i = lo; i <= hi; i++)
                 for (int j = i; j > lo && Less(a[j], a[j - 1], d); j--)
-                    Exch(a, j, j - 1);
+                    Exchange(a, j, j - 1);
         }
 
-        private static void Exch(string[] a, int i, int j)
+        private static void Exchange(string[] a, int i, int j)
         {
             string temp = a[i];
             a[i] = a[j];
