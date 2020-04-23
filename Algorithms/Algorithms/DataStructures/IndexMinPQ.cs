@@ -7,10 +7,10 @@ namespace Algorithms.DataStructures
     /// <summary>
     /// This class represents an indexed priority queue of generic keys.
     /// It supports the usual insert and delete-the-minimum
-    /// operations, along with delete> and change-the-key
+    /// operations, along with delete and change-the-key
     /// methods. In order to let the client refer to keys on the priority queue,
     /// an integer between 0 and maxN - 1
-    /// is associated with each key—the client uses this integer to specify
+    /// is associated with each key — the client uses this integer to specify
     /// which key to delete or change.
     /// It also supports methods for peeking at the minimum key,
     /// testing if the priority queue is empty, and iterating through
