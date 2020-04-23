@@ -4,7 +4,7 @@ namespace Algorithms.Searching
 {
     public static class BinarySearchExtension
     {
-        public static int BSearch<T>(this IList<T> collection, T key, IComparer<T> comparer = null)
+        public static int BSearch<T>(this IList<T> collection, T key, IComparer<T>? comparer = null)
         {
             comparer ??= Comparer<T>.Default;
 
