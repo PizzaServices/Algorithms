@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Algorithms.DataStructures;
+﻿using Algorithms.Containers;
 using NUnit.Framework;
 
 namespace AlgorithmsTest.DataStructureTests

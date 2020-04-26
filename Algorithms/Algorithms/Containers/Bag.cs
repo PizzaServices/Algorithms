@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Algorithms.DataStructures
+namespace Algorithms.Containers
 {
     /// <summary>
     /// This class represents a bag (or multiset) of generic items.It supports insertion and iterating over the items in arbitrary order.

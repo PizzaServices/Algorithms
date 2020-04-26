@@ -8,7 +8,7 @@ The implementations in the book were done in Java, I translated them to C#.
 
 ## Overview
 
-* [Data Structures](https://github.com/PizzaServices/Algorithms/tree/master/Algorithms/Algorithms/DataStructures)
+* [Containers](https://github.com/PizzaServices/Algorithms/tree/master/Algorithms/Algorithms/Containers)
 * [Graphs](https://github.com/PizzaServices/Algorithms/tree/master/Algorithms/Algorithms/Graphs)
 
   1. [Directed Graphs](https://github.com/PizzaServices/Algorithms/tree/master/Algorithms/Algorithms/Graphs/Directed)

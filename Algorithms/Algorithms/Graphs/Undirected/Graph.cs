@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Algorithms.DataStructures;
+using Algorithms.Containers;
 
 namespace Algorithms.Graphs.Undirected
 {

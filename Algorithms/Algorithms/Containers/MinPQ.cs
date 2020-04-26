@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Algorithms.DataStructures
+namespace Algorithms.Containers
 {
     /// <summary>
     /// This class represents a priority queue of generic keys.

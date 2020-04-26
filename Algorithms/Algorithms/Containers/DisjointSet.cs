@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Algorithms.DataStructures
+namespace Algorithms.Containers
 {
     /// <summary>
     /// This class represents a disjoint-sets data type

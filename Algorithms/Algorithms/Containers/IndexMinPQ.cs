@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Algorithms.DataStructures
+namespace Algorithms.Containers
 {
     /// <summary>
     /// This class represents an indexed priority queue of generic keys.

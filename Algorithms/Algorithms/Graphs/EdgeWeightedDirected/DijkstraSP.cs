@@ -1,4 +1,4 @@
-﻿using Algorithms.DataStructures;
+﻿using Algorithms.Containers;
 
 namespace Algorithms.Graphs.EdgeWeightedDirected
 {
