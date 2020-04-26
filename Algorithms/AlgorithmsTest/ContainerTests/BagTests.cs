@@ -2,7 +2,7 @@
 using Algorithms.Containers;
 using NUnit.Framework;
 
-namespace AlgorithmsTest.DataStructureTests
+namespace AlgorithmsTest.ContainerTests
 {
     [TestFixture]
     public class BagTests

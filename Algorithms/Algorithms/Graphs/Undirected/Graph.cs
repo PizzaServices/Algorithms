@@ -6,6 +6,9 @@ using Algorithms.Containers;
 
 namespace Algorithms.Graphs.Undirected
 {
+    /// <summary>
+    /// Represent a undirected unweighted Graph.
+    /// </summary>
     public class Graph
     {
         public int Vertices { get; } 
@@ -13,6 +16,10 @@ namespace Algorithms.Graphs.Undirected
 
         private readonly Bag<int>[] adjacencyList;
 
+        /// <summary>
+        /// Create a new instance with the give number of vertices
+        /// </summary>
+        /// <param name="numberOfVertices">Number of vertices of the graph</param>
         public Graph(int numberOfVertices)
         {
             Vertices = numberOfVertices;
@@ -24,6 +31,11 @@ namespace Algorithms.Graphs.Undirected
             }
         }
 
+        /// <summary>
+        /// Adds a new edge between the two vertices. Since this is a undirected graph the connection is made for both sides.
+        /// </summary>
+        /// <param name="tailVertex">The first vertex</param>
+        /// <param name="headVertex">The second vertex</param>
         public void AddEdge(int tailVertex, int headVertex)
         {
             adjacencyList[tailVertex].Add(headVertex);
@@ -31,11 +43,20 @@ namespace Algorithms.Graphs.Undirected
             Edges++;
         }
 
+        /// <summary>
+        /// Get the adjacency for the given vertex
+        /// </summary>
+        /// <param name="vertex">For this vertex you will get the adjacency</param>
+        /// <returns>A list of edges</returns>
         public IEnumerable<int> Adjacency(int vertex)
         {
             return adjacencyList[vertex];
         }
 
+        /// <summary>
+        /// Converts the graph in a string
+        /// </summary>
+        /// <returns>The graph represented as a string.</returns>
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
@@ -52,12 +73,21 @@ namespace Algorithms.Graphs.Undirected
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Get the number of edges for the vertex
+        /// </summary>
+        /// <param name="vertex">You will get the number of edges for this vertex</param>
+        /// <returns>The number of vertexes for the given vertex</returns>
         public int Degree(int vertex)
         {
             ValidateVertex(vertex);
             return adjacencyList[vertex].Size();
         }
 
+        /// <summary>
+        /// Returns the highest number of edges over all vertices.
+        /// </summary>
+        /// <returns>The highest number of edges</returns>
         public int MaxDegree()
         {
             int max = 0;
@@ -70,11 +100,19 @@ namespace Algorithms.Graphs.Undirected
             return max;
         }
 
+        /// <summary>
+        /// Returns the average number of edges over all vertices.
+        /// </summary>
+        /// <returns>The average number of edges</returns>
         public double AvgDegree()
         {
-            return 2 * Edges / Vertices;
+            return 2.0d * Edges / Vertices;
         }
 
+        /// <summary>
+        /// Returns the number of self loops in the graph
+        /// </summary>
+        /// <returns>The count of self loops</returns>
         public int NumberOfSelfLoops()
         {
             int count = 0;
