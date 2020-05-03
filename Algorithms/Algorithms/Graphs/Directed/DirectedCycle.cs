@@ -2,11 +2,12 @@
 
 namespace Algorithms.Graphs.Directed
 {
+#nullable enable
     public class DirectedCycle
     {
         private readonly bool[] marked;
         private readonly int[] edgeTo;
-        private Stack<int> cycle;
+        private Stack<int>? cycle;
         private readonly bool[] onStack;
 
         public DirectedCycle(Digraph digraph)
@@ -27,7 +28,7 @@ namespace Algorithms.Graphs.Directed
             return cycle != null;
         }
 
-        public IEnumerable<int> Cycle()
+        public IEnumerable<int>? Cycle()
         {
             return cycle;
         }

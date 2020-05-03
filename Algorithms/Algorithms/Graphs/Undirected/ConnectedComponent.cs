@@ -4,12 +4,14 @@
     {
         private readonly bool[] marked;
         private readonly int[] id;
+        private readonly int[] size;
         private readonly int count;
 
         public ConnectedComponent(Graph graph)
         {
             marked = new bool[graph.Vertices];
             id = new int[graph.Vertices];
+            size = new int[graph.Vertices];
 
             for(int index = 0; index < graph.Vertices; index++)
             {
@@ -36,10 +38,16 @@
             return count;
         }
 
+        public int Size(int vertex)
+        {
+            return size[id[vertex]];
+        }
+
         private void Dfs(Graph graph, int vertex)
         {
             marked[vertex] = true;
             id[vertex] = count;
+            size[count]++;
             foreach(var headVertex in graph.Adjacency(vertex))
             {
                 if (!marked[headVertex])
