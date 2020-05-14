@@ -4,9 +4,9 @@
     {
         public int StartVertex { get; }
         public int DestinationVertex { get; }
-        public int Weight { get; }
+        public double Weight { get; }
 
-        public DirectedEdge(int startVertex, int destinationVertex, int weight)
+        public DirectedEdge(int startVertex, int destinationVertex, double weight)
         {
             StartVertex = startVertex;
             DestinationVertex = destinationVertex;
